@@ -12,6 +12,11 @@ const api = axios.create({
 //   baseURL: baseURL,
 //   withCredentials: true,
 // });
+// const api = axios.create({
+//     baseURL: process.env.REACT_APP_BASE_URL,
+//   withCredentials: true,
+// });
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
