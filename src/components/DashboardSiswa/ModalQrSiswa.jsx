@@ -10,7 +10,7 @@ const ModalQrSiswa = () => {
   const isDevelopment = window.location.hostname === 'localhost';
 
   // const baseURL = isDevelopment ? 'http://localhost:5000' : 'http://192.168.100.230:5000';
-  const baseURL = REACT_APP_BASE_URL;
+  const baseURL = process.env.REACT_APP_BASE_URL;
   const fetchqr = async () => {
     try {
       const res = await api.get('/siswa/qrsiswa');
