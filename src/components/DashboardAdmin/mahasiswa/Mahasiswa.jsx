@@ -32,6 +32,7 @@ const MahasiswaTable = () => {
     try {
       const res = await api.get('/users/siswa');
       setData(res.data);
+      console.log(res.data)
     } catch (err) {
       console.log(err);
       setError('Gagal fetch data');
