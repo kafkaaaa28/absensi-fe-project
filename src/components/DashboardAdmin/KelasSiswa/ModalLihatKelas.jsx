@@ -67,10 +67,10 @@ const ModalDetail = ({ data, modalLihat, setShowKelasModal }) => {
       }
     }
   };
-  const handleDeleteKelas = async (id) => {
+  const handleDeleteKelas = async (id_siswa, id_kelas) => {
     try {
-      await api.delete(`/kelas/siswa/${id}`);
-      setKelasData(dataKelas.filter((datas) => datas.id_user !== id));
+      await api.delete(`/kelas/siswa/${id_siswa}/${id_kelas}`);
+      setKelasData(dataKelas.filter((datas) => datas.id_user !== id_siswa));
       await fetchKelas();
       setShowdeletemodal(false);
       showAlert();

@@ -4,3 +4,27 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+.loader {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  animation: spin 1s linear infinite;
+  stroke: rgb(255, 255, 255);
+}
+
+.loading-text {
+  font-size: 1rem;
+  line-height: 1rem;
+  font-weight: 500;
+  color: rgb(218, 224, 234);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

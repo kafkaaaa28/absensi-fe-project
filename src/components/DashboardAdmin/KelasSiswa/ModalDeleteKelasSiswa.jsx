@@ -9,7 +9,7 @@ const ModalDelete = ({ modaldelete, data, onDelete, setshowdeleteModal }) => {
 
   const handleDelete = (e) => {
     e.preventDefault();
-    onDelete(data.id);
+    onDelete(data.id_siswa, data.id_kelas);
   };
 
   return (

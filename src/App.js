@@ -7,11 +7,11 @@ import Admin from './components/DashboardAdmin/Admin';
 import Dosen from './components/DashboardDosen/Dosen';
 import Mahasiswa from './components/DashboardSiswa/Mahasiswa';
 import Beranda from './components/Beranda';
+import LoadingPage from './LoadingPage';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [user, setUser] = useState(null);
-  const [jadwal, setJadwal] = useState([]);
-
+  const [IsOpen, setIsOpen] = useState(true);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkAuth = async () => {
@@ -37,39 +37,46 @@ function App() {
           console.error('Other error:', err);
         }
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
       }
     };
-
+    const timer1 = setTimeout(() => setIsOpen(false), 1200);
     checkAuth();
   }, []);
 
   return (
     <div className="overflow-hidden">
-      <Routes>
-        <Route path="/" element={<Beranda setIsAuthenticated={setIsAuthenticated} setUser={setUser} isAuthenticated={isAuthenticated} />} />
+      {loading ? (
+        <div className={`fixed top-0 left-0 w-full h-screen bg-[#162542] z-50 flex items-center justify-center transition-all duration-1000 ease-in-out transform ${IsOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+          <LoadingPage />
+        </div>
+      ) : (
+        <Routes>
+          <Route path="/" element={<Beranda setIsAuthenticated={setIsAuthenticated} setUser={setUser} isAuthenticated={isAuthenticated} />} />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated && user?.role === 'admin' ? (
+                <Navigate to="/dashboardAdmin" />
+              ) : isAuthenticated && user?.role === 'dosen' ? (
+                <Navigate to="/dashboardDosen" />
+              ) : isAuthenticated && user?.role === 'siswa' ? (
+                <Navigate to="/dashboard" />
+              ) : (
+                <Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
+              )
+            }
+          />
 
-        <Route
-          path="/login"
-          element={
-            isAuthenticated && user?.role === 'admin' ? (
-              <Navigate to="/dashboardAdmin" />
-            ) : isAuthenticated && user?.role === 'dosen' ? (
-              <Navigate to="/dashboardDosen" />
-            ) : isAuthenticated && user?.role === 'siswa' ? (
-              <Navigate to="/dashboard" />
-            ) : (
-              <Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
-            )
-          }
-        />
+          <Route path="/dashboardAdmin/*" element={isAuthenticated && user?.role === 'admin' ? <Admin setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
 
-        <Route path="/dashboardAdmin/*" element={isAuthenticated && user?.role === 'admin' ? <Admin setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
+          <Route path="/dashboardDosen/*" element={isAuthenticated && user?.role === 'dosen' ? <Dosen setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
 
-        <Route path="/dashboardDosen/*" element={isAuthenticated && user?.role === 'dosen' ? <Dosen setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
-
-        <Route path="/dashboard/*" element={isAuthenticated && user?.role === 'siswa' ? <Mahasiswa setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
-      </Routes>
+          <Route path="/dashboard/*" element={isAuthenticated && user?.role === 'siswa' ? <Mahasiswa setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
+        </Routes>
+      )}
     </div>
   );
 }

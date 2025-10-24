@@ -5,6 +5,9 @@ import { FaBookOpen, FaCalendarAlt } from 'react-icons/fa';
 import bgsiswa from '../img/bg-siswa.png';
 import JadwalSiswaHarini from './JadwalSiswaHarini';
 import ModalQrSiswa from './ModalQrSiswa';
+import Pusher from 'pusher-js';
+import Swal from 'sweetalert2';
+
 const DataBoardSiswa = () => {
   const [totalMatkul, setTotalMatkul] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -39,8 +42,31 @@ const DataBoardSiswa = () => {
   };
 
   useEffect(() => {
+    const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
+      cluster: process.env.REACT_APP_PUSHER_CLUSTER,
+    });
+    const channel = pusher.subscribe('absensi-channel');
+
+    channel.bind('absen-update', (data) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        confirmButtonText: 'OK',
+        text: `Anda baru saja absen pada Pukul ${data.waktu}`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    });
+
     fetchCounts();
     getMe();
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
   }, []);
   if (loading) {
     return (

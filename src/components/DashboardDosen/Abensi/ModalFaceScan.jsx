@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'flowbite-react';
 import * as faceapi from 'face-api.js';
 import api from '../../../utils/api';
-import Swal from 'sweetalert2';
-import { Spinner } from 'flowbite-react';
 const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   const [formData, setFromData] = useState({ ...data });
   const videoRef = useRef();
@@ -15,6 +13,11 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   useEffect(() => {
     if (modalLihat) {
       startCamera();
+      const interval = setInterval(() => {
+        handleScan();
+      }, 2000);
+
+      return () => clearInterval(interval);
     } else {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject;
@@ -48,38 +51,40 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   };
 
   const handleScan = async (e) => {
-    e.preventDefault();
     setLoading(true);
     setMessage('Mendeteksi wajah...');
-    const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-
-    if (!detection) {
-      setMessage('Wajah tidak terdeteksi! Coba lagi.');
-      return;
-    }
-
-    const embedding = Array.from(detection.descriptor);
 
     try {
-      const res = await api.put(`dosen/absensi/update-face`, {
-        embedding,
-        kelasId: data.id_kelas,
-        jadwalId: data.id_jadwal,
-      });
-      setMessage(res.data.message || 'Absensi wajah berhasil!');
-      StopCamera();
-      OnClose(false);
-      Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: res.data.message,
-      });
+      const faces = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+
+      if (!faces.length) {
+        setMessage('Tidak ada wajah terdeteksi!');
+        return;
+      }
+
+      for (const face of faces) {
+        const descriptor = Array.from(face.descriptor);
+
+        if (!descriptor || descriptor.length === 0) {
+          console.error('Descriptor kosong!');
+          continue;
+        }
+        const res = await api.put(`dosen/absensi/update-face`, {
+          descriptor,
+          kelasId: data.id_kelas,
+          jadwalId: data.id_jadwal,
+        });
+      }
+
+      setMessage('Absensi wajah berhasil!');
     } catch (err) {
+      console.error('Error:', err);
       setMessage(err.response?.data?.message || 'Gagal melakukan absensi.');
     } finally {
       setLoading(false);
     }
   };
+
   const StopCamera = () => {
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject;
@@ -98,15 +103,13 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
         size="3xl"
       >
         <ModalBody className="bg-white">
-          <form onSubmit={handleScan} className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Absen dengan Wajah</h2>
+          <div className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Absen Otomatis dengan Wajah</h2>
 
             <video ref={videoRef} autoPlay muted width="400" height="300" className="rounded-lg border-2 border-gray-400" />
 
-            <button type="submit" className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-              {loading ? 'loading...' : 'Cek Wajah & Absen'}
-            </button>
-          </form>
+            <p className="mt-2 text-gray-600">{message}</p>
+          </div>
         </ModalBody>
 
         <ModalFooter className="bg-white">

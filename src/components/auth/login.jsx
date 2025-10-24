@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import appease from '../img/univ.png';
 import bgappease from '../img/unnamed.png';
+import { Spinner } from 'flowbite-react';
 const Login = ({ setIsAuthenticated, setUser }) => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -72,7 +73,14 @@ const Login = ({ setIsAuthenticated, setUser }) => {
               </div>
             </div>
             <button type="submit" className="w-full bg-[#13314E] hover:bg-gray-800 text-white font-bold py-3 rounded-xl transition duration-300">
-              {loading ? 'Loading...' : 'Login'}
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Spinner color="info" aria-label="Info spinner example" size="md" />
+                  <p>Loading </p>
+                </div>
+              ) : (
+                'Login'
+              )}
             </button>
             {error && <p className="text-red-400">{error}</p>}
           </form>

@@ -29,7 +29,7 @@ const ProfileSiswa = () => {
   const fetchqr = async () => {
     try {
       const res = await api.get('/siswa/qrsiswa');
-      setQrpath(res.data.qrImage);
+      setQrpath(res.data.qr);
     } catch (err) {
       console.log(err.response?.data?.message || err.message);
     }

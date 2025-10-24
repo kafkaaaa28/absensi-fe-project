@@ -5,7 +5,6 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { MdMeetingRoom } from 'react-icons/md';
 import appease from '../img/univ.png';
-
 const Navdashboard = ({ setIsAuthenticated, setUser }) => {
   const [open, setOpen] = useState(false);
   const Toggler = () => {
