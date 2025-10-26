@@ -1,5 +1,5 @@
 import React from 'react';
-import bgappease from './img/682940.jpg';
+import bgappease from './img/682940.webp';
 import Navbar from './Navbar';
 
 const Beranda = ({ setIsAuthenticated, isAuthenticated, setUser }) => {

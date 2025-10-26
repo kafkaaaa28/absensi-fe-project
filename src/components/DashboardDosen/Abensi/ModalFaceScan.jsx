@@ -79,7 +79,6 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
       setMessage('Absensi wajah berhasil!');
     } catch (err) {
       console.error('Error:', err);
-      setMessage(err.response?.data?.message || 'Gagal melakukan absensi.');
     } finally {
       setLoading(false);
     }

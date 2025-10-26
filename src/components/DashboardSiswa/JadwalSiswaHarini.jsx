@@ -22,7 +22,6 @@ const JadwalSiswaHarini = () => {
         statusObj[item.id_kelas] = item.status;
       });
       setStatusMap(statusObj);
-      console.log('StatusMap:', statusObj);
     } catch (err) {
       console.log('Gagal ambil status:', err.response?.data?.message || err.message);
     }

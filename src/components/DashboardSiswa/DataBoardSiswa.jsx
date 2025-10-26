@@ -12,7 +12,7 @@ const DataBoardSiswa = () => {
   const [totalMatkul, setTotalMatkul] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isDosen, setIsDosen] = useState([]);
+  const [isSiswa, setIsSiswa] = useState([]);
   const [jadwalharini, setJadwalHarini] = useState([]);
 
   const fetchCounts = async () => {
@@ -33,7 +33,7 @@ const DataBoardSiswa = () => {
   const getMe = async () => {
     try {
       const response = await api.get('/auth/me');
-      setIsDosen(response.data);
+      setIsSiswa(response.data);
       setLoading(false);
     } catch (err) {
       console.log('gagal ambil data');
@@ -45,21 +45,33 @@ const DataBoardSiswa = () => {
     const pusher = new Pusher(process.env.REACT_APP_PUSHER_KEY, {
       cluster: process.env.REACT_APP_PUSHER_CLUSTER,
     });
-    const channel = pusher.subscribe('absensi-channel');
 
+    const channel = pusher.subscribe(`absensi-channel-${isSiswa.id_siswa}`);
+    const ChannelQr = pusher.subscribe(`absensi-channel-qr-${isSiswa.id_siswa}`);
     channel.bind('absen-update', (data) => {
       Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
+        icon: data.success ? 'success' : 'error',
+        title: data.success ? 'Berhasil!' : 'Gagal!',
+        text: data.message,
         confirmButtonText: 'OK',
-        text: `Anda baru saja absen pada Pukul ${data.waktu}`,
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && data.success) {
           window.location.reload();
         }
       });
     });
-
+    ChannelQr.bind('absen-qr-update', (data) => {
+      Swal.fire({
+        icon: data.success ? 'success' : 'error',
+        title: data.success ? 'Berhasil!' : 'Gagal!',
+        text: data.message,
+        confirmButtonText: 'OK',
+      }).then((result) => {
+        if (result.isConfirmed && data.success) {
+          window.location.reload();
+        }
+      });
+    });
     fetchCounts();
     getMe();
 
@@ -67,7 +79,7 @@ const DataBoardSiswa = () => {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, []);
+  }, [isSiswa?.id_siswa]);
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -97,7 +109,7 @@ const DataBoardSiswa = () => {
           <div className="relative z-20 h-full w-full p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold">
-                Selamat Datang, <span className="text-blue-300"> {loading ? <Spinner color="success" size="md" aria-label="Loading" /> : isDosen?.nama}</span> 👋
+                Selamat Datang, <span className="text-blue-300"> {loading ? <Spinner color="success" size="md" aria-label="Loading" /> : isSiswa?.nama}</span> 👋
               </h2>
               <p className="text-white/80 mt-1 text-sm">Dashboard terbaru Anda ada di sini</p>
             </div>

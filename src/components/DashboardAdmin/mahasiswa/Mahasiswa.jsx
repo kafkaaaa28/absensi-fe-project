@@ -5,6 +5,8 @@ import ModalEdit from './ModalEdit';
 import ModalDelete from './ModalDelet';
 import Swal from 'sweetalert2';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { TbFaceId } from 'react-icons/tb';
+import DeleteFace from './DeleteFace';
 const MahasiswaTable = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,6 +15,7 @@ const MahasiswaTable = () => {
   const [selectedsiswa, setSelectedsiswa] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [ShowModalFace, setShowModalFace] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const showAlert = () => {
@@ -32,7 +35,7 @@ const MahasiswaTable = () => {
     try {
       const res = await api.get('/users/siswa');
       setData(res.data);
-      console.log(res.data)
+      console.log(res.data);
     } catch (err) {
       console.log(err);
       setError('Gagal fetch data');
@@ -48,7 +51,10 @@ const MahasiswaTable = () => {
     setSelectedsiswa(item);
     setShowEditModal(true);
   };
-
+  const handleFace = (item) => {
+    setSelectedsiswa(item);
+    setShowModalFace(true);
+  };
   const handleUpdate = async (id, updatedData) => {
     setLoading(true);
     try {
@@ -85,7 +91,20 @@ const MahasiswaTable = () => {
       ErrAlert();
     }
   };
-
+  const handleDeleteFace = async (id) => {
+    setLoading(true);
+    try {
+      await api.delete(`/users/face/${id}`);
+      setLoading(false);
+      setShowModalFace(false);
+      showAlert();
+    } catch (err) {
+      console.log(err.response?.data?.message || 'Failed to delete user');
+      setLoading(false);
+      setShowModalFace(false);
+      ErrAlert();
+    }
+  };
   return (
     <>
       <div className="flex flex-col md:flex-row gap-4 p-3 justify-center items-center">
@@ -152,6 +171,9 @@ const MahasiswaTable = () => {
                           <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center gap-2" onClick={() => handleDelete(item)}>
                             <FaRegTrashAlt /> Delete
                           </button>
+                          <button className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 flex items-center gap-2" onClick={() => handleFace(item)}>
+                            <TbFaceId className="text-lg" /> Delete Face
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -163,6 +185,7 @@ const MahasiswaTable = () => {
       </div>
       <ModalEdit showEditModal={showEditModal} setShowEditModal={setShowEditModal} loading={loading} data={selectedsiswa} onUpdate={handleUpdate} />
       <ModalDelete modaldelete={showDeleteModal} data={selectedsiswa} onDelete={handleDeletesiswa} setModaldelete={setShowDeleteModal} loading={loading} />
+      <DeleteFace modaldelete={ShowModalFace} data={selectedsiswa} onDelete={handleDeleteFace} setModaldelete={setShowModalFace} loading={loading} />
     </>
   );
 };

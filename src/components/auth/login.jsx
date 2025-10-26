@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaLock } from 'react-icons/fa';
 import appease from '../img/univ.png';
 import bgappease from '../img/unnamed.png';
 import { Spinner } from 'flowbite-react';
+import { MdEmail } from 'react-icons/md';
 const Login = ({ setIsAuthenticated, setUser }) => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -63,11 +64,21 @@ const Login = ({ setIsAuthenticated, setUser }) => {
         <div className=" mb-4">
           <h2 className="text-lg text-center font-bold mb-4">Login</h2>
           <form onSubmit={handleLogin} id="formLogin" className="space-y-3">
-            <input type="email" name="email" value={email} onChange={handelchange} id="loginEmail" placeholder="Email" required className="w-full p-3 border border-gray-300 rounded-xl" />
+            <div className="relative flex items-center">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <MdEmail className="text-gray-500" />
+              </div>
+              <input type="email" name="email" value={email} onChange={handelchange} id="loginEmail" placeholder="Email" required className="w-full p-3 border border-gray-300 rounded-xl ps-10" />
+            </div>
             <div>
-              <div className="flex items-center gap-2">
-                <input type={lihatPassword ? 'text' : 'password'} name="password" value={password} onChange={handelchange} id="password" placeholder="Password" required className="w-full p-3 border border-gray-300 rounded-xl pr-10" />
-                <button type="button" onClick={handleLihatPassword} className="text-gray-600 hover:text-gray-800">
+              <div className="relative flex items-center">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <FaLock className="text-gray-500" />
+                </div>
+
+                <input type={lihatPassword ? 'text' : 'password'} name="password" value={password} onChange={handelchange} id="password" placeholder="Password" required className="w-full p-3 border border-gray-300 rounded-xl pl-10 pr-10" />
+
+                <button type="button" onClick={handleLihatPassword} className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800">
                   {lihatPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
@@ -82,7 +93,7 @@ const Login = ({ setIsAuthenticated, setUser }) => {
                 'Login'
               )}
             </button>
-            {error && <p className="text-red-400">{error}</p>}
+            {error && <p className="text-red-400 text-center">{error}</p>}
           </form>
         </div>
       </div>

@@ -26,33 +26,22 @@ const ModalQrScan = ({ data, modalLihat, OnClose }) => {
       stopScanner();
     };
   }, [modalLihat]);
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
+  // const now = new Date();
+  // const year = now.getFullYear();
+  // const month = String(now.getMonth() + 1).padStart(2, '0');
+  // const day = String(now.getDate()).padStart(2, '0');
+  // const hours = String(now.getHours()).padStart(2, '0');
+  // const minutes = String(now.getMinutes()).padStart(2, '0');
+  // const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  // const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   const handleQrSuccess = async (decodedText) => {
     setScanResult(decodedText);
     stopScanner();
     try {
       const res = await api.put(`/dosen/absensi/update-qr`, { qrCode: decodedText, kelasId: data.id_kelas, jadwalId: data.id_jadwal });
-      Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: res.data.message,
-      });
-      stopScanner();
-      OnClose(false);
     } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal',
-        text: err.response?.data?.message || 'Terjadi kesalahan saat update absensi!',
-      });
+      console.log(err);
     }
   };
   const startScanner = () => {
