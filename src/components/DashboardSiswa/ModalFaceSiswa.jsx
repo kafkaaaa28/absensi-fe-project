@@ -35,11 +35,6 @@ const ModalFaceSiswa = ({ ModalFace, setModalFace }) => {
   useEffect(() => {
     if (ModalFace) {
       startCamera();
-      const interval = setInterval(() => {
-        captureFace();
-      }, 1500);
-
-      return () => clearInterval(interval);
     } else {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject;
@@ -49,6 +44,7 @@ const ModalFaceSiswa = ({ ModalFace, setModalFace }) => {
     }
   }, [ModalFace]);
   const captureFace = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setMessage('Mendeteksi wajah...');
 
@@ -90,11 +86,14 @@ const ModalFaceSiswa = ({ ModalFace, setModalFace }) => {
     <>
       <Modal show={ModalFace} size="xl">
         <ModalBody className="bg-white  ">
-          <div className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl shadow-md">
+          <form onSubmit={captureFace} className="flex flex-col items-center p-6 bg-gray-100 rounded-2xl shadow-md">
             <h2 className="text-xl font-bold text-black text-center">Scan Wajah</h2>
             <video ref={videoRef} autoPlay muted playsInline width="400" height="300" />
             <p className="mt-2 text-gray-600">{message}</p>
-          </div>
+            <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+              {loading ? 'Menangkap...' : 'tangkap wajah'}
+            </button>
+          </form>
         </ModalBody>
       </Modal>
     </>
