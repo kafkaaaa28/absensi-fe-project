@@ -8,6 +8,7 @@ import Matkul from './Matkul/Matkul';
 import DataJadwal from './jadwal/Jadwal';
 import Kelas from './Kelas/Kelas';
 import KelasSiswa from './KelasSiswa/KelasSiswa';
+import AsdosTable from './Asdos/DataAsdos';
 const Admin = ({ setIsAuthenticated, setUser }) => {
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2] ">
@@ -18,6 +19,7 @@ const Admin = ({ setIsAuthenticated, setUser }) => {
             <Route index element={<DataboardAdmin />} />
             <Route path="/mahasiswa" element={<MahasiswaTable />} />
             <Route path="/dosen" element={<Dosen />} />
+            <Route path="/asdos" element={<AsdosTable />} />
             <Route path="/matkul" element={<Matkul />} />
             <Route path="/jadwal-matkul" element={<DataJadwal />} />
             <Route path="/kelas" element={<Kelas />} />

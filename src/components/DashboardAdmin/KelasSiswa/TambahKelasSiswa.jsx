@@ -91,7 +91,6 @@ function TambahKelas({ isOpen, setIsOpen, onSucces }) {
     e.preventDefault();
     setLoading(true);
     try {
-      console.log(formData);
       const res = await api.post('/kelas/siswa', formData);
       setIsOpen(false);
       showAlert();

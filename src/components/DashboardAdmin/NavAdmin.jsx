@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FaBars, FaHome, FaUserGraduate, FaChalkboardTeacher, FaBook, FaCalendarAlt } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import { MdMeetingRoom } from 'react-icons/md';
+import { MdMeetingRoom, MdOutlineSupervisorAccount } from 'react-icons/md';
 import appease from '../img/univ.png';
 const Navdashboard = ({ setIsAuthenticated, setUser }) => {
   const [open, setOpen] = useState(false);
@@ -49,6 +49,12 @@ const Navdashboard = ({ setIsAuthenticated, setUser }) => {
               <Link to={'/dashboardAdmin/dosen'} className="flex items-center p-2 text-white rounded-lg bg-black  hover:bg-gray-700">
                 <FaChalkboardTeacher className="text-green-500" />
                 <span className="ms-3">Data Dosen</span>
+              </Link>
+            </li>
+            <li>
+              <Link to={'/dashboardAdmin/asdos'} className="flex items-center p-2 text-white rounded-lg bg-black  hover:bg-gray-700">
+                <MdOutlineSupervisorAccount className="text-pink-500" />
+                <span className="ms-3">Data Asdos</span>
               </Link>
             </li>
             <li>
