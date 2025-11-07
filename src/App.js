@@ -6,6 +6,7 @@ import api from './utils/api';
 import Admin from './components/DashboardAdmin/Admin';
 import Dosen from './components/DashboardDosen/Dosen';
 import Mahasiswa from './components/DashboardSiswa/Mahasiswa';
+import Asdos from './components/DashboardAsdos/Asdos';
 import Beranda from './components/Beranda';
 import LoadingPage from './LoadingPage';
 function App() {
@@ -64,6 +65,8 @@ function App() {
                 <Navigate to="/dashboardDosen" />
               ) : isAuthenticated && user?.role === 'siswa' ? (
                 <Navigate to="/dashboard" />
+              ) : isAuthenticated && user?.role === 'asdos' ? (
+                <Navigate to="/dashboardAsdos" />
               ) : (
                 <Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
               )
@@ -73,7 +76,7 @@ function App() {
           <Route path="/dashboardAdmin/*" element={isAuthenticated && user?.role === 'admin' ? <Admin setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
 
           <Route path="/dashboardDosen/*" element={isAuthenticated && user?.role === 'dosen' ? <Dosen setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
-
+          <Route path="/dashboardAsdos/*" element={isAuthenticated && user?.role === 'asdos' ? <Asdos setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
           <Route path="/dashboard/*" element={isAuthenticated && user?.role === 'siswa' ? <Mahasiswa setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
         </Routes>
       )}

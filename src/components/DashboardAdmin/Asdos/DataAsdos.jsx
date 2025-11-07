@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../../utils/api';
 import TambahAsdos from './TambahAsdos';
 import ModalEdit from './ModalEditAsdos';
-// import ModalDelete from './ModalDeletDosen';
+import ModalDelete from './ModalDeleteAsdos';
 import Swal from 'sweetalert2';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 
@@ -172,7 +172,7 @@ const AsdosTable = () => {
         </div>
       </div>
       <ModalEdit showEditModal={showEditModal} setShowEditModal={setShowEditModal} loading={loading} data={selectAsdos} onUpdate={handleUpdate} />
-      {/* <ModalDelete modaldelete={showDeleteModal} data={selectAsdos} onDelete={handleDeleteAsdos} setModaldelete={setShowDeleteModal} loading={loading} /> */}
+      <ModalDelete modaldelete={showDeleteModal} data={selectAsdos} onDelete={handleDeleteAsdos} setModaldelete={setShowDeleteModal} loading={loading} />
     </>
   );
 };

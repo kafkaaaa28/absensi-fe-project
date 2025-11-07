@@ -5,7 +5,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { LuLayoutDashboard } from 'react-icons/lu';
 import { FiLogOut } from 'react-icons/fi';
 import api from '../utils/api';
-
+import Swal from 'sweetalert2';
 const Navbar = ({ isAuthenticated, Logout }) => {
   const navigate = useNavigate();
   const [isUser, setIsuser] = useState([]);
@@ -27,8 +27,14 @@ const Navbar = ({ isAuthenticated, Logout }) => {
       navigate('/dashboard');
     } else if (isUser.role === 'dosen') {
       navigate('/dashboardDosen');
+    } else if (isUser.role === 'asdos') {
+      navigate('/dashboardAsdos');
     } else {
-      alert('Role tidak dikenali');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Role Tidak Dikenali',
+      });
     }
   };
   useEffect(() => {

@@ -44,6 +44,8 @@ const Login = ({ setIsAuthenticated, setUser }) => {
           navigate('/dashboard');
         } else if (userRole === 'dosen' || userRole === 'admin') {
           navigate('/dashboardDosen');
+        } else if (userRole === 'asdos' || userRole === 'admin') {
+          navigate('/dashboardAsdos');
         } else {
           navigate('/');
         }
