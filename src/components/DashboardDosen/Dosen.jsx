@@ -6,7 +6,7 @@ import JadwalDosen from './Jadwal/JadwalDosen';
 import MatkulDosen from './Jadwal/MatkulDosen';
 import ProfileDosen from './Profile/ProfileDosen';
 
-const Admin = ({ setIsAuthenticated, setUser }) => {
+const Dosen = ({ setIsAuthenticated, setUser }) => {
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2] ">
       <NavDosen setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
@@ -23,4 +23,4 @@ const Admin = ({ setIsAuthenticated, setUser }) => {
     </div>
   );
 };
-export default Admin;
+export default Dosen;

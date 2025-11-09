@@ -9,42 +9,12 @@ import Mahasiswa from './components/DashboardSiswa/Mahasiswa';
 import Asdos from './components/DashboardAsdos/Asdos';
 import Beranda from './components/Beranda';
 import LoadingPage from './LoadingPage';
+import { useAuth } from './context/AuthContext';
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [user, setUser] = useState(null);
   const [IsOpen, setIsOpen] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const { isAuthenticated, setIsAuthenticated, user, setUser, loading } = useAuth();
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const res = await api.get('/auth/me', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setIsAuthenticated(true);
-          setUser(res.data);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (err) {
-        if (err.response?.status === 401) {
-          console.warn('Unauthorized, removing token');
-          localStorage.removeItem('token');
-          setIsAuthenticated(false);
-        } else {
-          console.error('Other error:', err);
-        }
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1500);
-      }
-    };
     const timer1 = setTimeout(() => setIsOpen(false), 1200);
-    checkAuth();
   }, []);
 
   return (
@@ -55,7 +25,7 @@ function App() {
         </div>
       ) : (
         <Routes>
-          <Route path="/" element={<Beranda setIsAuthenticated={setIsAuthenticated} setUser={setUser} isAuthenticated={isAuthenticated} />} />
+          <Route path="/" element={<Beranda />} />
           <Route
             path="/login"
             element={
@@ -68,12 +38,12 @@ function App() {
               ) : isAuthenticated && user?.role === 'asdos' ? (
                 <Navigate to="/dashboardAsdos" />
               ) : (
-                <Login setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
+                <Login />
               )
             }
           />
 
-          <Route path="/dashboardAdmin/*" element={isAuthenticated && user?.role === 'admin' ? <Admin setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
+          <Route path="/dashboardAdmin/*" element={isAuthenticated && user?.role === 'admin' ? <Admin /> : <Navigate to="/" />} />
 
           <Route path="/dashboardDosen/*" element={isAuthenticated && user?.role === 'dosen' ? <Dosen setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />
           <Route path="/dashboardAsdos/*" element={isAuthenticated && user?.role === 'asdos' ? <Asdos setIsAuthenticated={setIsAuthenticated} setUser={setUser} /> : <Navigate to="/" />} />

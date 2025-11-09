@@ -12,12 +12,11 @@ const api = axios.create({
   baseURL: baseURL,
   withCredentials: true,
 });
-
+let accessToken = null;
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -27,15 +26,25 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/';
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const { data } = await api.post('/auth/refresh');
+      accessToken = data.accessToken;
+
+      originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+      return api(originalRequest);
     }
 
-    return Promise.reject(err);
+    return Promise.reject(error);
   }
 );
+export const setAccessToken = (token) => {
+  accessToken = token;
+};
 
 export default api;

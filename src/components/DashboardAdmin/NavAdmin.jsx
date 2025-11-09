@@ -5,16 +5,16 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { MdMeetingRoom, MdOutlineSupervisorAccount } from 'react-icons/md';
 import appease from '../img/univ.png';
-const Navdashboard = ({ setIsAuthenticated, setUser }) => {
+import { useAuth } from '../../context/AuthContext';
+
+const Navdashboard = () => {
+  const { logout } = useAuth();
+
   const [open, setOpen] = useState(false);
   const Toggler = () => {
     setOpen(!open);
   };
-  const Logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setUser(null);
-  };
+
   return (
     <div>
       <div className="flex justify-end">
@@ -84,7 +84,7 @@ const Navdashboard = ({ setIsAuthenticated, setUser }) => {
           </ul>
 
           <div className="mt-auto">
-            <button onClick={Logout} className="flex items-center p-2 w-full text-white bg-black rounded-lg hover:bg-gray-700">
+            <button onClick={logout} className="flex items-center p-2 w-full text-white bg-black rounded-lg hover:bg-gray-700">
               <RiLogoutBoxLine className="text-lg" />
               <span className="ms-3">Logout</span>
             </button>

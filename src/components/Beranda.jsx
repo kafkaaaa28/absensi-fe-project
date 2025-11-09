@@ -1,17 +1,12 @@
 import React from 'react';
 import bgappease from './img/682940.webp';
 import Navbar from './Navbar';
-
-const Beranda = ({ setIsAuthenticated, isAuthenticated, setUser }) => {
-  const Logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setUser(null);
-  };
+import { useAuth } from '../context/AuthContext';
+const Beranda = () => {
   return (
     <div className="relative bg-cover bg-center bg-fixed min-h-screen " style={{ backgroundImage: `url(${bgappease})` }}>
       <div className="relative z-20">
-        <Navbar isAuthenticated={isAuthenticated} Logout={Logout} />
+        <Navbar />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-blue-700/50 to-green-400/50">
         <div className="w-full  h-screen flex flex-col justify-center items-center">

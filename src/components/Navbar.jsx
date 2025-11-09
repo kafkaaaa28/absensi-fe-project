@@ -6,28 +6,21 @@ import { LuLayoutDashboard } from 'react-icons/lu';
 import { FiLogOut } from 'react-icons/fi';
 import api from '../utils/api';
 import Swal from 'sweetalert2';
-const Navbar = ({ isAuthenticated, Logout }) => {
+import { useAuth } from '../context/AuthContext';
+
+const Navbar = () => {
+  const { logout, isAuthenticated, user, getMe } = useAuth();
+
   const navigate = useNavigate();
-  const [isUser, setIsuser] = useState([]);
-  const Keluar = () => {
-    Logout();
-  };
-  const getMe = async () => {
-    try {
-      const res = await api.get('/auth/me');
-      setIsuser(res.data);
-    } catch (err) {
-      console.log(`error : ${err.response.data.message}`);
-    }
-  };
+
   const handleDashboard = () => {
-    if (isUser.role === 'admin') {
+    if (user.role === 'admin') {
       navigate('/dashboardAdmin');
-    } else if (isUser.role === 'siswa') {
+    } else if (user.role === 'siswa') {
       navigate('/dashboard');
-    } else if (isUser.role === 'dosen') {
+    } else if (user.role === 'dosen') {
       navigate('/dashboardDosen');
-    } else if (isUser.role === 'asdos') {
+    } else if (user.role === 'asdos') {
       navigate('/dashboardAsdos');
     } else {
       Swal.fire({
@@ -56,7 +49,10 @@ const Navbar = ({ isAuthenticated, Logout }) => {
               <button
                 onClick={() => {
                   if (isAuthenticated) {
-                    Keluar();
+                    {
+                      logout();
+                      navigate('/');
+                    }
                   } else {
                     navigate('/login');
                   }

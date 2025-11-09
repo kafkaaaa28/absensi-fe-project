@@ -8,32 +8,14 @@ import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import appease from '../img/univ.png';
 import { IoMdSchool } from 'react-icons/io';
+import { useAuth } from '../../context/AuthContext';
 const Navdashboard = ({ setIsAuthenticated, setUser }) => {
+  const { logout, user, loading } = useAuth();
   const [open, setOpen] = useState(false);
-  const [IsUser, setIsUser] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const Toggler = () => {
     setOpen(!open);
   };
-  const Logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setUser(null);
-  };
-  const getMe = async () => {
-    try {
-      const response = await api.get('/auth/me');
-      setIsUser(response.data);
-      setLoading(false);
-    } catch (err) {
-      console.log('gagal ambil data');
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getMe();
-  }, []);
+
   return (
     <div>
       <div className="flex justify-end">
@@ -55,8 +37,8 @@ const Navdashboard = ({ setIsAuthenticated, setUser }) => {
               <p className="text-white my-3 font-bold">Memuat Data...</p>
             ) : (
               <>
-                <p className="text-white font-bold text-center">{IsUser.nama}</p>
-                <p className="text-white font-bold mb-3 text-center">{IsUser.email}</p>
+                <p className="text-white font-bold text-center">{user.nama}</p>
+                <p className="text-white font-bold mb-3 text-center">{user.email}</p>
               </>
             )}
           </div>
@@ -88,7 +70,7 @@ const Navdashboard = ({ setIsAuthenticated, setUser }) => {
           </ul>
 
           <div className="mt-auto">
-            <button onClick={Logout} className="flex items-center p-2 w-full text-white bg-black rounded-lg hover:bg-gray-700">
+            <button onClick={logout} className="flex items-center p-2 w-full text-white bg-black rounded-lg hover:bg-gray-700">
               <RiLogoutBoxLine className="text-lg" />
               <span className="ms-3">Logout</span>
             </button>

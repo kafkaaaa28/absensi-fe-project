@@ -6,11 +6,12 @@ import appease from '../img/univ.png';
 import bgappease from '../img/unnamed.png';
 import { Spinner } from 'flowbite-react';
 import { MdEmail } from 'react-icons/md';
-const Login = ({ setIsAuthenticated, setUser }) => {
+import { useAuth } from '../../context/AuthContext';
+const Login = () => {
+  const { login } = useAuth();
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [fromData, setFromdata] = useState({
     email: '',
     password: '',
@@ -29,27 +30,10 @@ const Login = ({ setIsAuthenticated, setUser }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post('/auth/login', fromData);
-      localStorage.setItem('token', response.data.token);
-      setIsAuthenticated(true);
-      setUser(response.data.user);
+      await login(fromData);
       setLoading(false);
-      const userRole = response.data.user.role;
       setError('');
-      setMessage(response.data.message || 'Login berhasil');
-      setTimeout(() => {
-        if (userRole === 'admin') {
-          navigate('/dashboardAdmin');
-        } else if (userRole === 'siswa' || userRole === 'admin') {
-          navigate('/dashboard');
-        } else if (userRole === 'dosen' || userRole === 'admin') {
-          navigate('/dashboardDosen');
-        } else if (userRole === 'asdos' || userRole === 'admin') {
-          navigate('/dashboardAsdos');
-        } else {
-          navigate('/');
-        }
-      }, 100);
+      setMessage('Login berhasil');
     } catch (err) {
       setLoading(false);
       console.error('Login error:', err.response?.data || err.message);

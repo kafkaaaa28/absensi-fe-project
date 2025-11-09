@@ -9,10 +9,10 @@ import DataJadwal from './jadwal/Jadwal';
 import Kelas from './Kelas/Kelas';
 import KelasSiswa from './KelasSiswa/KelasSiswa';
 import AsdosTable from './Asdos/DataAsdos';
-const Admin = ({ setIsAuthenticated, setUser }) => {
+const Admin = () => {
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2] ">
-      <NavAdmin setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
+      <NavAdmin />
       <div>
         <div className="ml-[20px] mr-[20px] md:ml-[270px] md:mr-[20px]">
           <Routes>
