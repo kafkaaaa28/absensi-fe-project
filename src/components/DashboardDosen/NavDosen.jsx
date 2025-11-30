@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import appease from '../img/univ.png';
 import { IoMdSchool } from 'react-icons/io';
 import { useAuth } from '../../context/AuthContext';
-const Navdashboard = ({ setIsAuthenticated, setUser }) => {
+const Navdashboard = () => {
   const { logout, user, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const Toggler = () => {

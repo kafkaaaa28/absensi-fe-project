@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }) => {
       setAccessToken(newAccessToken);
       const res = await api.get('/auth/me');
       setUser(res.data);
-      console.log(res.data);
       setIsAuthenticated(true);
     } catch (err) {
       console.warn('User belum login:', err.response?.status);
