@@ -1,21 +1,17 @@
 import axios from 'axios';
 
-// const api = axios.create({
-//   baseURL: process.env.REACT_APP_BASE_URL,
-//   withCredentials: true,
-// });
+const api = axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL,
+  withCredentials: true,
+});
 const isDevelopment = window.location.hostname === 'localhost';
 
 const baseURL = isDevelopment ? 'http://localhost:5000/api' : 'http://192.168.100.230:5000/api';
-const forceLogout = () => {
-  accessToken = null;
-  window.location.href = '/login';
-};
 
-const api = axios.create({
-  baseURL: baseURL,
-  withCredentials: true,
-});
+// const api = axios.create({
+//   baseURL: baseURL,
+//   withCredentials: true,
+// });
 let accessToken = null;
 api.interceptors.request.use(
   async (config) => {
