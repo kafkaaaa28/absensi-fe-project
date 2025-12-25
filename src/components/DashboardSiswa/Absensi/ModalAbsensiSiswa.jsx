@@ -19,7 +19,7 @@ const ModalAbsensiSiswa = ({ data, modalLihat, OnClose }) => {
   const fetchAbsensi = async () => {
     try {
       const res = await api.get(`/siswa/absensi/${formData.id_kelas}`);
-      setDataAbsen(res.data);
+      setDataAbsen(res.data.data);
       console.log(res.data);
     } catch (err) {
       console.log(`Gagal Ambil Absen ${err.response?.data?.message || err.message}`);

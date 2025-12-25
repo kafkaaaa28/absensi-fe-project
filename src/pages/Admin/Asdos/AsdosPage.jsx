@@ -5,6 +5,8 @@ import TambahAsdos from './components/TambahAsdos';
 import { ErrAlert, showAlert } from '../../../utils/alerts';
 import ModalEditAsdos from './components/ModalEditAsdos';
 import ModalDeleteAsdos from './components/ModalDeleteAsdos';
+import LoadingPage from '../../../components/common/LoadingPage';
+
 const AsdosPage = () => {
   const { dataAsdos, loading, createUsers, fetchAsdos, deleteUsers, updateUsers } = useAsdos();
   const [error, setError] = useState(null);
@@ -14,6 +16,13 @@ const AsdosPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [loadingForm, setLoadingForm] = useState(false);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <LoadingPage color="#162542" />
+      </div>
+    );
+  }
   return (
     <>
       <div className="flex flex-col  md:flex-row gap-4 p-3 justify-center items-center">

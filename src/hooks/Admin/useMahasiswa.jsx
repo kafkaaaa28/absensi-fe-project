@@ -4,12 +4,13 @@ import { getAllMahasiswa, createUsers, deleteUsers, updateUsers, deleteFaceMahas
 export const useMahasiswa = () => {
   const [dataMahasiswa, setDataMahasiswa] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [totalMahasiswa, setTotalMahasiswa] = useState(0);
   const fetchMahasiswa = async () => {
     setLoading(true);
     try {
       const res = await getAllMahasiswa();
       setDataMahasiswa(res.data);
+      setTotalMahasiswa(res.data.length);
     } catch (err) {
       console.log(err.res.data.message);
     } finally {
@@ -20,5 +21,5 @@ export const useMahasiswa = () => {
     fetchMahasiswa();
   }, []);
 
-  return { dataMahasiswa, loading, fetchMahasiswa, createUsers, deleteUsers, updateUsers, deleteFaceMahasiswa };
+  return { dataMahasiswa, loading, totalMahasiswa, fetchMahasiswa, createUsers, deleteUsers, updateUsers, deleteFaceMahasiswa };
 };

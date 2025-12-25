@@ -1,5 +1,6 @@
 import api from '../../utils/api';
 
+// user
 export const getAllDosen = () => api.get('/users/dosen');
 export const getAllAsdos = () => api.get('users/asdos');
 export const getAllMahasiswa = () => api.get('/users/siswa');

@@ -15,3 +15,11 @@ export const ErrAlert = (data) => {
     text: data,
   });
 };
+
+export const infoAlert = () => {
+  Swal.fire({
+    icon: 'info',
+    title: 'Informasi',
+    text: 'Mohon maaf fitur ini sedang diperbaiki',
+  });
+};

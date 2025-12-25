@@ -3,16 +3,16 @@ import api from '../../utils/api';
 import Swal from 'sweetalert2';
 import ModalEdit from './Jadwal/ModalEditStatus';
 import ModalQrScan from './Abensi/ModalQrScan';
-import ModalFaceScan from './Abensi/ModalFaceScan';
+import ModalFaceScan from '../../pages/Dosen/dashboard/components/ModalFaceScan';
 const JadwalDosenharini = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedJadwal, setSelectedJadwal] = useState(null);
   const [showedit, setShowedit] = useState(false);
-  const [showOpenModal, setshowOpenModal] = useState(false);
   const [OpenScan, setOpenScan] = useState(false);
   const [OpenScanFace, setOpenScanFace] = useState(false);
+  const [showOpenModal, setshowOpenModal] = useState(false);
   const [cekDibuka, setCekDibuka] = useState(false);
   useEffect(() => {
     fetchJadwal();

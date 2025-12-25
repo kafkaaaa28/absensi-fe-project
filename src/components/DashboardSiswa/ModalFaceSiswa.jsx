@@ -49,6 +49,7 @@ const ModalFaceSiswa = ({ ModalFace, setModalFace }) => {
     setMessage('Mendeteksi wajah...');
 
     try {
+      // Mendeteksi wajah tunggal dan membuat face descriptor
       const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
 
       if (!detection) {
@@ -56,11 +57,12 @@ const ModalFaceSiswa = ({ ModalFace, setModalFace }) => {
 
         return;
       }
-
+      // Ubah descriptor menjadi array dan simpan ke formData
       const descriptorArray = Array.from(detection.descriptor);
       const jsonString = JSON.stringify(descriptorArray);
       setFormData({ face_embedding: jsonString });
 
+      // Kirim data wajah ke backend
       await api.post('/siswa/upload-face', {
         face_embedding: jsonString,
       });
@@ -68,11 +70,13 @@ const ModalFaceSiswa = ({ ModalFace, setModalFace }) => {
         title: 'Berhasil Scan Wajah!',
         icon: 'success',
       });
+      // ketika berhasil Hentikan kamera dan hapus video stream
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject;
         stream.getTracks().forEach((track) => track.stop());
         videoRef.current.srcObject = null;
       }
+      // modal tutup otomatis ketika scan wajah berhasil
       setModalFace(false);
     } catch (error) {
       console.error('Error saat capture face:', error);

@@ -3,9 +3,9 @@ import { Button, Modal, ModalBody, ModalFooter } from 'flowbite-react';
 import * as faceapi from 'face-api.js';
 import { FaceDetection } from '@mediapipe/face_detection';
 import { Camera } from '@mediapipe/camera_utils';
-import api from '../../../utils/api';
+import api from '../../../../utils/api';
 
-const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
+const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -62,7 +62,7 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
       const res = await api.get(`dosen/faceSiswa/${data.id_kelas}`);
       labeledDescriptors.current = res.data.map((item) => ({
         name: item.nama,
-        npm: item.npm,
+        nim: item.nim,
         descriptor: new Float32Array(JSON.parse(item.face_embedding)),
       }));
     } catch (err) {
@@ -165,7 +165,7 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
 
       const match = findMatchByPosition(x, y, w, h);
       // Cek apakah sudah absen
-      const isAlreadyProcessed = match && processedNPMs.current.has(match.npm);
+      const isAlreadyProcessed = match && processedNPMs.current.has(match.nim);
 
       let boxColor = 'red';
       let displayText = 'Mengenali...';
@@ -173,10 +173,10 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
       if (match) {
         if (isAlreadyProcessed) {
           boxColor = '#00C853';
-          displayText = `Absen Berhasil ${match.name} (${match.npm})`;
+          displayText = `Absen Berhasil ${match.name} (${match.nim})`;
         } else {
           boxColor = '#FFA000';
-          displayText = `${match.name} (${match.npm})`;
+          displayText = `${match.name} (${match.nim})`;
         }
       } else {
         // Cek apakah ada wajah yang sudah dikenali tapi tidak match posisi
@@ -282,9 +282,9 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
           faceMatches.current.set(faceId, match);
 
           //  jika belum absen maka
-          if (!processedNPMs.current.has(match.npm)) {
+          if (!processedNPMs.current.has(match.nim)) {
             // Tandai sudah absen
-            processedNPMs.current.add(match.npm);
+            processedNPMs.current.add(match.nim);
 
             // Tambahkan ke list absen sementara
             newAbsenList.push(match);
@@ -295,11 +295,11 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
                 descriptor: Array.from(faceDetection.descriptor),
                 kelasId: data.id_kelas,
                 jadwalId: data.id_jadwal,
-                nim: match.npm,
+                nim: match.nim,
               });
             } catch (err) {
               console.error('Gagal absen untuk:', match.name, err);
-              processedNPMs.current.delete(match.npm);
+              processedNPMs.current.delete(match.nim);
             }
           }
         } else {
@@ -410,4 +410,4 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   );
 };
 
-export default LihatAbsensi;
+export default ModalFaceScan;

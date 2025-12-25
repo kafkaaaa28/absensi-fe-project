@@ -13,7 +13,6 @@ const ModalEditMahasiswa = ({ mahasiswa, loading, onSubmit, isOpen, onClose }) =
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(mahasiswa.id_user, formData);
-    console.log(mahasiswa.id_user, formData);
   };
   return (
     <Modal show={isOpen} onClose={onClose} size="md">

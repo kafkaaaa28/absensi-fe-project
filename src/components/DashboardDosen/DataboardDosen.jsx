@@ -6,13 +6,16 @@ import JadwalDosenharini from './JadwalDosenHarini';
 import { FaBookOpen, FaCalendarAlt, FaChalkboardTeacher, FaClock, FaUserTie } from 'react-icons/fa';
 import { MdMeetingRoom, MdSchedule, MdDashboard } from 'react-icons/md';
 import { HiAcademicCap, HiCalendar } from 'react-icons/hi';
+import { useAuth } from '../../context/AuthContext';
+
 const DataboardDosen = () => {
+  const { user } = useAuth();
+
   const [totalKelas, setTotalKelas] = useState(0);
   const [totalJadwal, setTotalJadwal] = useState(0);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isDosen, setIsDosen] = useState([]);
   const fetchCounts = async () => {
     try {
       setLoading(false);
@@ -27,21 +30,10 @@ const DataboardDosen = () => {
     }
   };
 
-  const getMe = async () => {
-    try {
-      const response = await api.get('/auth/me');
-      setIsDosen(response.data);
-      setLoading(false);
-    } catch (err) {
-      console.log('gagal ambil data');
-      setLoading(false);
-    }
-  };
   const hariIni = new Date().toLocaleString('id-ID', { weekday: 'long' });
 
   useEffect(() => {
     fetchCounts();
-    getMe();
   }, []);
 
   const statsCards = [
@@ -140,7 +132,7 @@ const DataboardDosen = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4  sm:px-6 lg:px-8">
           <div className="flex justify-between items-center pt-8 pb-6">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold">Selamat Datang, {isDosen?.nama} 👋</h1>
+              <h1 className="text-2xl md:text-3xl font-bold">Selamat Datang, {user?.nama} 👋</h1>
               <p className="text-blue-100 mt-2">Dashboard terbaru Anda ada di sini</p>
             </div>
             <div className="hidden md:block">

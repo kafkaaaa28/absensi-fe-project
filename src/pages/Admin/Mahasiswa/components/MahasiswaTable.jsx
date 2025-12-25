@@ -1,70 +1,103 @@
-import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { FaRegEdit, FaRegTrashAlt, FaUser, FaIdCard, FaUniversity, FaGraduationCap, FaCalendar } from 'react-icons/fa';
 import { TbFaceId } from 'react-icons/tb';
-import LoadingPage from '../../../../components/common/LoadingPage';
-const MahasiswaTable = ({ data, loading, search, onEdit, onDelete, onDeleteFace }) => {
-  const filtered = data.filter((m) => m.nama.toLowerCase().includes(search.toLowerCase()));
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <LoadingPage color="#162542" />
-      </div>
-    );
-  }
+
+const MahasiswaTable = ({ data, search, onEdit, onDelete, onDeleteFace }) => {
+  const filtered = data.filter((item) => (item.nim || '').toLowerCase().includes(search.toLowerCase()) || (item.nama || '').toLowerCase().includes(search.toLowerCase()));
+
   return (
-    <div className="relative overflow-x-auto p-4 rounded-lg">
-      <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th scope="col" className="px-6 py-3">
-                No
+              <th scope="col" className="px-4 py-3 text-left">
+                <span className="text-gray-700 font-medium">No</span>
               </th>
-              <th scope="col" className="px-6 py-3">
-                Nama
+              <th scope="col" className="px-4 py-3 text-left">
+                <div className="flex items-center gap-2">
+                  <FaUser className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">Nama</span>
+                </div>
               </th>
-              <th scope="col" className="px-6 py-3">
-                NIM
+              <th scope="col" className="px-4 py-3 text-left">
+                <div className="flex items-center gap-2">
+                  <FaIdCard className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">NIM</span>
+                </div>
               </th>
-              <th scope="col" className="px-6 py-3">
-                Fakultas
+              <th scope="col" className="px-4 py-3 text-left">
+                <div className="flex items-center gap-2">
+                  <FaUniversity className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">Fakultas</span>
+                </div>
               </th>
-              <th scope="col" className="px-6 py-3">
-                Prodi
+              <th scope="col" className="px-4 py-3 text-left">
+                <div className="flex items-center gap-2">
+                  <FaGraduationCap className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">Prodi</span>
+                </div>
               </th>
-              <th scope="col" className="px-6 py-3">
-                Semester
+              <th scope="col" className="px-4 py-3 text-left">
+                <div className="flex items-center gap-2">
+                  <FaCalendar className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">Semester</span>
+                </div>
               </th>
-              <th scope="col" className="px-6 py-3">
-                Aksi
+              <th scope="col" className="px-4 py-3 text-left">
+                <span className="text-gray-700 font-medium">Aksi</span>
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-100">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center py-4 bg-white text-gray-500">
-                  Tidak ada Mahasiswa
+                <td colSpan="7" className="px-4 py-8 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <FaUser className="w-10 h-10 text-gray-300 mb-2" />
+                    <p className="text-gray-500 text-sm font-medium">{data.length === 0 ? 'Tidak ada mahasiswa' : 'Data tidak ditemukan'}</p>
+                    <p className="text-gray-400 text-xs mt-1">{search ? 'Coba dengan kata kunci lain' : 'Semua mahasiswa akan muncul di sini'}</p>
+                  </div>
                 </td>
               </tr>
             ) : (
               filtered.map((item, index) => (
-                <tr key={item.id} className="bg-white border-b  border-gray-200 transition">
-                  <td className=" px-6 py-4">{index + 1}</td>
-                  <td className="px-6 py-4">{item.nama}</td>
-                  <td className="px-6 py-4">{item.nim}</td>
-                  <td className="px-6 py-4">{item.fakultas}</td>
-                  <td className="px-6 py-4">{item.prodi}</td>
-                  <td className="px-6 py-4">{item.semester}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex space-x-2">
-                      <button className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2 hover:bg-blue-600" onClick={() => onEdit(item)}>
-                        <FaRegEdit /> Edit
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3">
+                    <span className="text-gray-600">{index + 1}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
+                        <FaUser className="w-4 h-4 text-blue-600" />
+                      </div>
+                      <span className="text-gray-800 font-medium">{item.nama}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <code className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono">{item.nim}</code>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="text-gray-700">{item.fakultas}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="text-gray-700">{item.prodi}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-medium">Semester {item.semester}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-1.5">
+                      <button className="flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md hover:bg-blue-100 transition-colors border border-blue-200 text-xs" onClick={() => onEdit(item)}>
+                        <FaRegEdit className="w-3 h-3" />
+                        <span>Edit</span>
                       </button>
-                      <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center gap-2" onClick={() => onDelete(item)}>
-                        <FaRegTrashAlt /> Delete
+                      <button className="flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-1.5 rounded-md hover:bg-red-100 transition-colors border border-red-200 text-xs" onClick={() => onDelete(item)}>
+                        <FaRegTrashAlt className="w-3 h-3" />
+                        <span>Hapus</span>
                       </button>
-                      <button className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 flex items-center gap-2" onClick={() => onDeleteFace(item)}>
-                        <TbFaceId className="text-lg" /> Delete Face
+                      <button className="flex items-center gap-1.5 bg-yellow-50 text-yellow-600 px-3 py-1.5 rounded-md hover:bg-yellow-100 transition-colors border border-yellow-200 text-xs" onClick={() => onDeleteFace(item)}>
+                        <TbFaceId className="w-3.5 h-3.5" />
+                        <span>Face ID</span>
                       </button>
                     </div>
                   </td>
@@ -77,4 +110,5 @@ const MahasiswaTable = ({ data, loading, search, onEdit, onDelete, onDeleteFace 
     </div>
   );
 };
+
 export default MahasiswaTable;

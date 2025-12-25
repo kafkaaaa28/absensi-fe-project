@@ -3,12 +3,13 @@ import { getAllDosen, createUsers, deleteUsers, updateUsers } from '../../api/Ad
 export const useDosen = () => {
   const [dataDosen, setDataDosen] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [totalDosen, setTotalDosen] = useState(0);
   const fetchDosen = async () => {
     setLoading(true);
     try {
       const res = await getAllDosen();
       setDataDosen(res.data);
+      setTotalDosen(res.data.length);
     } catch (err) {
       console.log(err?.response?.data?.message);
     } finally {
@@ -19,5 +20,5 @@ export const useDosen = () => {
     fetchDosen();
   }, []);
 
-  return { dataDosen, loading, fetchDosen, createUsers, deleteUsers, updateUsers };
+  return { dataDosen, loading, totalDosen, fetchDosen, createUsers, deleteUsers, updateUsers };
 };

@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { FaEye, FaEyeSlash, FaLock } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
-
+import { infoAlert } from '../../utils/alerts';
 export default function LoginForm({ onSubmit, loading, error }) {
   const [showPass, setShowPass] = useState(false);
-
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -18,14 +17,14 @@ export default function LoginForm({ onSubmit, loading, error }) {
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-gray-700">
+    <form className="space-y-4" onSubmit={handleSubmit}>
+      <div className="space-y-1">
+        <label htmlFor="email" className="text-xs font-medium text-gray-700">
           Email Address
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MdEmail className="h-5 w-5 text-gray-400" />
+            <MdEmail className="h-4 w-4 text-gray-400" />
           </div>
           <input
             id="email"
@@ -34,24 +33,24 @@ export default function LoginForm({ onSubmit, loading, error }) {
             value={form.email}
             onChange={handleChange}
             placeholder="Enter your email"
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+            className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
             required
           />
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <label htmlFor="password" className="text-sm font-medium text-gray-700">
+          <label htmlFor="password" className="text-xs font-medium text-gray-700">
             Password
           </label>
-          <button type="button" className="text-xs text-blue-600 hover:text-blue-500 font-medium">
-            Forgot password?
+          <button onClick={() => infoAlert()} type="button" className="text-xs text-blue-600 hover:text-blue-500">
+            Forgot?
           </button>
         </div>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FaLock className="h-5 w-5 text-gray-400" />
+            <FaLock className="h-4 w-4 text-gray-400" />
           </div>
           <input
             id="password"
@@ -60,35 +59,44 @@ export default function LoginForm({ onSubmit, loading, error }) {
             value={form.password}
             onChange={handleChange}
             placeholder="Enter your password"
-            className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+            className="w-full pl-9 pr-10 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
             required
           />
           <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center" onClick={() => setShowPass(!showPass)}>
-            {showPass ? <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" /> : <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />}
+            {showPass ? <FaEyeSlash className="h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors" /> : <FaEye className="h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors" />}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-          <p className="text-red-700 text-sm text-center font-medium">{error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <p className="text-red-700 text-xs text-center font-medium">{error}</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3.5 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+        className="w-full bg-blue-600 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-blue-700 focus:ring-1 focus:ring-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? (
-          <div className="flex items-center justify-center space-x-2">
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             <span>Signing in...</span>
           </div>
         ) : (
           'Sign In'
         )}
       </button>
+
+      <div className="text-center">
+        <p className="text-xs text-gray-600">
+          Don't have an account?{' '}
+          <button onClick={() => infoAlert()} type="button" className="text-blue-600 hover:text-blue-500 font-medium">
+            Contact Admin
+          </button>
+        </p>
+      </div>
     </form>
   );
 }

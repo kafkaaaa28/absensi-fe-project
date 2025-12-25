@@ -1,60 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import { FaUserGraduate, FaChalkboardTeacher, FaBook } from 'react-icons/fa';
+import { FaUserGraduate, FaChalkboardTeacher, FaBook, FaUserTie } from 'react-icons/fa';
 import { MdMeetingRoom } from 'react-icons/md';
 import DataBoard from './components/DataBoard';
-import { getAllMahasiswa } from '../../../api/Admin/usersApi';
+import DataCount from './components/DataCount';
+import DataSistem from './components/DataSistem';
+import { useDosen } from '../../../hooks/Admin/useDosen';
+import { useMahasiswa } from '../../../hooks/Admin/useMahasiswa';
+import { useMatkul } from '../../../hooks/Admin/useMatkul';
+import { useAsdos } from '../../../hooks/Admin/useAsdos';
+import { useKelas } from '../../../hooks/Admin/useKelas';
+import LoadingPage from '../../../components/common/LoadingPage';
+import { useAuth } from '../../../context/AuthContext';
 const DataBoardPage = () => {
-  const [totalUsers, setTotalUsers] = useState(0);
-  //   const [totalDosen, setTotalDosen] = useState(0);
-  //   const [totalMatkul, setTotalMatkul] = useState(0);
-  //   const [totalKelas, setTotalKelas] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const fetchCounts = async () => {
-    setLoading(true);
-    try {
-      const resSiswa = await getAllMahasiswa();
-      setTotalUsers(resSiswa.data.length);
-      //   const resDosen = await api.get('/users/dosen');
-      //   setTotalDosen(resDosen.data.length);
-      //   const resKelas = await api.get('/kelas');
-      //   setTotalKelas(resKelas.data.length);
-      //   const resMatkul = await api.get('/matkul');
-      //   setTotalMatkul(resMatkul.data.length);
-    } catch (err) {
-      setError('Gagal mengambil data: ' + (err.response?.data?.message || err.message));
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCounts();
-  }, []);
+  const { loading } = useAuth();
+  const { totalMahasiswa } = useMahasiswa();
+  const { totalDosen } = useDosen();
+  const { totalMatkul } = useMatkul();
+  const { totalAsdos } = useAsdos();
+  console.log(totalAsdos);
+  const { totalKelas } = useKelas();
 
   const Menu = [
     {
+      Name: 'Mahasiswa',
+      link: 'mahasiswa',
       icon: <FaUserGraduate className="w-8 h-8 text-blue-600" />,
-      total: totalUsers,
+      total: totalMahasiswa,
     },
     {
+      Name: 'Dosen',
+      link: 'dosen',
       icon: <FaChalkboardTeacher className="w-8 h-8 text-green-600" />,
-      total: 0,
+      total: totalDosen,
     },
     {
+      Name: 'Mata Kuliah',
+      link: 'matkul',
       icon: <FaBook className="w-8 h-8 text-purple-600" />,
-      total: 0,
+      total: totalMatkul,
     },
     {
+      Name: 'Kelas',
+      link: 'kelas',
       icon: <MdMeetingRoom className="w-8 h-8 text-yellow-600" />,
-      total: 0,
+      total: totalKelas,
+    },
+    {
+      Name: 'Asisten Dosen',
+      link: 'asdos',
+      icon: <FaUserTie className="w-8 h-8 text-red-600" />,
+      total: totalAsdos,
     },
   ];
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <LoadingPage color="#162542" />
+      </div>
+    );
+  }
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <DataBoard Menu={Menu} loading={loading} error={error} />
+    <div className="min-h-screen bg-gray-100 ">
+      <DataBoard />
+      <DataCount Menu={Menu} />
+      <DataSistem />
     </div>
   );
 };

@@ -7,14 +7,6 @@ const ProfileDosen = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#162542]"></div>
-      </div>
-    );
-  }
-
   const menuItems = [
     {
       icon: <FaEnvelope className="text-blue-500" />,

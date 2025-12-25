@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import { Spinner } from 'flowbite-react';
 const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   const [formData, setFromData] = useState({ ...data });
-  const [dataSiswa, setSiswaData] = useState([]);
   const [date, setDate] = useState([]);
   const [loading, setLoading] = useState(false);
   const [postTanggal, setPostTanggal] = useState({ tanggal: '' });

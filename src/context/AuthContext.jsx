@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (fromData) => {
     const { data } = await api.post('/auth/login', fromData);
     setAccessToken(data.accessToken);
-    setUser(data.user);
+    await getMe();
     setIsAuthenticated(true);
     const userRole = data.user.role;
     setTimeout(() => {
@@ -41,17 +41,16 @@ export const AuthProvider = ({ children }) => {
     try {
       const resAuth = await api.post('/auth/refresh');
       const newAccessToken = resAuth.data.accessToken;
-      setAccessToken(newAccessToken);
+      await setAccessToken(newAccessToken);
       const res = await api.get('/auth/me');
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (err) {
-      console.warn('User belum login:', err.response?.status);
       setIsAuthenticated(false);
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 1500);
+      }, 2000);
     }
   };
   const getMe = async () => {

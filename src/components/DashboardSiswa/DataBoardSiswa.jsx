@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../utils/api';
-import { Spinner } from 'flowbite-react';
-import { FaBookOpen, FaCalendarAlt } from 'react-icons/fa';
+import { FaBookOpen, FaCalendarAlt, FaQrcode, FaUser, FaChartLine } from 'react-icons/fa';
 import bgsiswa from '../img/bg-siswa.png';
 import JadwalSiswaHarini from './JadwalSiswaHarini';
-import ModalQrSiswa from './ModalQrSiswa';
 import Pusher from 'pusher-js';
 import Swal from 'sweetalert2';
 
@@ -17,27 +15,26 @@ const DataBoardSiswa = () => {
 
   const fetchCounts = async () => {
     try {
-      setLoading(false);
-      const resMatkul = await api.get('/siswa/matkulsiswa');
+      setLoading(true);
+      const [resMatkul, resJadwalHarini] = await Promise.all([api.get('/siswa/matkulsiswa'), api.get('/siswa/jadwalharini')]);
       setTotalMatkul(resMatkul.data.length);
-      const resJadwalHarini = await api.get('/siswa/jadwalharini');
       setJadwalHarini(resJadwalHarini.data.length);
     } catch (err) {
-      setLoading(false);
       setError('Gagal mengambil data: ' + (err.response?.data?.message || err.message));
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
+
   const hariIni = new Date().toLocaleString('id-ID', { weekday: 'long' });
 
   const getMe = async () => {
     try {
       const response = await api.get('/auth/me');
       setIsSiswa(response.data);
-      setLoading(false);
     } catch (err) {
       console.log('gagal ambil data');
-      setLoading(false);
     }
   };
 
@@ -48,6 +45,7 @@ const DataBoardSiswa = () => {
 
     const channel = pusher.subscribe(`absensi-channel-${isSiswa.id_siswa}`);
     const ChannelQr = pusher.subscribe(`absensi-channel-qr-${isSiswa.id_siswa}`);
+
     channel.bind('absen-update', (data) => {
       Swal.fire({
         icon: data.success ? 'success' : 'error',
@@ -60,6 +58,7 @@ const DataBoardSiswa = () => {
         }
       });
     });
+
     ChannelQr.bind('absen-qr-update', (data) => {
       Swal.fire({
         icon: data.success ? 'success' : 'error',
@@ -72,6 +71,7 @@ const DataBoardSiswa = () => {
         }
       });
     });
+
     fetchCounts();
     getMe();
 
@@ -80,83 +80,178 @@ const DataBoardSiswa = () => {
       channel.unsubscribe();
     };
   }, [isSiswa?.id_siswa]);
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-3"></div>
+          <p className="text-gray-600 text-sm">Memuat dashboard...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
-          <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
-          <p>{error}</p>
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaChartLine className="w-6 h-6 text-red-600" />
+          </div>
+          <h2 className="text-lg font-semibold text-red-600 mb-4">Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button onClick={fetchCounts} className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
+            Coba Lagi
+          </button>
         </div>
       </div>
     );
   }
+
   return (
-    <>
-      <div className="min-h-screen bg-gray-100 p-6">
-        <div className="relative rounded-xl overflow-hidden h-52 md:h-64 shadow-lg mb-5">
-          <img src={bgsiswa} alt="dashboard background" className="absolute inset-0 w-full h-full object-cover object-[center_75%] z-0" />
+    <div className="min-h-screen bg-gray-50 pb-8">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r  from-blue-600 to-blue-800 text-white pb-8">
+        <div className="absolute inset-0 overflow-hidden">
+          <img src={bgsiswa} alt="dashboard background" className="w-full h-full object-cover opacity-20" />
+        </div>
 
-          <div className="absolute inset-0 bg-black/40 z-10" />
-
-          <div className="relative z-20 h-full w-full p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 pb-6">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold">
-                Selamat Datang, <span className="text-blue-300"> {loading ? <Spinner color="success" size="md" aria-label="Loading" /> : isSiswa?.nama}</span> 👋
-              </h2>
-              <p className="text-white/80 mt-1 text-sm">Dashboard terbaru Anda ada di sini</p>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <FaUser className="w-6 h-6" />
+                </div>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold">Selamat Datang, {isSiswa?.nama} 👋</h1>
+                  <p className="text-blue-100 mt-1">Dashboard mahasiswa terbaru</p>
+                </div>
+              </div>
             </div>
 
             <div className="mt-4 md:mt-0">
-              <span className="inline-block bg-gradient-to-r from-blue-400 to-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md">Mahasiswa Panel</span>
+              <span className="bg-white/20 backdrop-blur-sm text-white text-sm font-semibold py-2 px-4 rounded-lg border border-white/30">Mahasiswa Panel</span>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                    <FaBookOpen className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-xs">Total Mata Kuliah</p>
+                    <p className="text-white text-xl font-bold">{totalMatkul}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                    <FaCalendarAlt className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-xs">Jadwal Hari Ini</p>
+                    <p className="text-white text-xl font-bold">{jadwalharini}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row items-center gap-3 justify-center">
-          <ModalQrSiswa />
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-1  md:w-[65%]">
-            <div className="bg-white rounded-lg shadow p-6 hover:shadow-xl transition duration-300">
-              <div className="flex items-center space-x-4">
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <FaBookOpen className="w-8 h-8 text-blue-600" />
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+        {/* Jadwal Hari Ini */}
+        <div className="bg-white rounded-xl shadow-sm border z-30 mt-7 border-gray-200 overflow-hidden mb-6">
+          <div className="px-4 py-3 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <FaCalendarAlt className="w-4 h-4 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total MataKuliah Saya</p>
-                  <p className="text-2xl font-semibold text-gray-700">{loading ? <Spinner color="info" aria-label="Info spinner example" /> : totalMatkul}</p>
+                  <h2 className="text-sm font-bold text-gray-800">Jadwal Hari Ini</h2>
+                  <p className="text-gray-600 text-xs">{hariIni}</p>
                 </div>
               </div>
+              <button className="text-blue-600 text-xs font-medium hover:text-blue-700">Lihat Semua</button>
             </div>
-            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-1">
-              <div className="bg-white rounded-lg shadow p-6 hover:shadow-xl transition duration-300">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-green-100 p-3 rounded-full">
-                    <FaCalendarAlt className="w-8 h-8 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Total Jadwal Saya Hari ini</p>
-                    <p className="text-2xl font-semibold text-gray-700">{loading ? <Spinner color="info" aria-label="Info spinner example" /> : jadwalharini}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          </div>
+          <div className="p-4">
+            <JadwalSiswaHarini />
           </div>
         </div>
 
-        <div className="bg-gray-200 mt-3 rounded-lg">
-          <div className=" flex p-3">
-            <p className="font-bold text-md">Jadwal Harini, {hariIni}</p>
+        {/* Additional Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Quick Links */}
+          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+            <h3 className="text-sm font-bold text-gray-800 mb-4">Akses Cepat</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <button className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-2">
+                  <FaBookOpen className="w-5 h-5 text-blue-600" />
+                </div>
+                <span className="text-xs text-gray-700 font-medium">Mata Kuliah</span>
+              </button>
+
+              <button className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-2">
+                  <FaCalendarAlt className="w-5 h-5 text-green-600" />
+                </div>
+                <span className="text-xs text-gray-700 font-medium">Jadwal</span>
+              </button>
+
+              <button className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-2">
+                  <FaQrcode className="w-5 h-5 text-purple-600" />
+                </div>
+                <span className="text-xs text-gray-700 font-medium">QR Absen</span>
+              </button>
+
+              <button className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-2">
+                  <FaChartLine className="w-5 h-5 text-orange-600" />
+                </div>
+                <span className="text-xs text-gray-700 font-medium">Nilai</span>
+              </button>
+            </div>
           </div>
-          <JadwalSiswaHarini />
+
+          {/* Status Akademik */}
+          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+            <h3 className="text-sm font-bold text-gray-800 mb-4">Status Akademik</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 text-xs">IPK</span>
+                <span className="text-blue-600 font-bold text-sm">3.45</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 text-xs">SKS Tempuh</span>
+                <span className="text-gray-800 font-bold text-sm">110</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 text-xs">Status</span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Aktif</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 text-xs">Semester</span>
+                <span className="text-gray-800 font-bold text-sm">6</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

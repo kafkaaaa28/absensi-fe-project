@@ -8,7 +8,7 @@ const JadwalSiswaHarini = () => {
   const fetchJadwalHarini = async () => {
     try {
       const res = await api.get('/siswa/jadwalharini');
-      setData(res.data);
+      setData(res.data.data);
     } catch (err) {
       console.log(err.response?.data?.message || err.message);
     }

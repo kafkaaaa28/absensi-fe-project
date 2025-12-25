@@ -3,12 +3,13 @@ import { getAllAsdos, createUsers, deleteUsers, updateUsers } from '../../api/Ad
 export const useAsdos = () => {
   const [dataAsdos, setDataAsdos] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [totalAsdos, setTotalAsdos] = useState(false);
   const fetchAsdos = async () => {
     setLoading(true);
     try {
       const res = await getAllAsdos();
-      setDataAsdos(res.data);
+      setDataAsdos(res.data.data);
+      setTotalAsdos(res.data.data.length);
     } catch (err) {
       console.log(err?.response?.data?.message);
     } finally {
@@ -19,5 +20,5 @@ export const useAsdos = () => {
     fetchAsdos();
   }, []);
 
-  return { dataAsdos, loading, fetchAsdos, createUsers, deleteUsers, updateUsers };
+  return { dataAsdos, loading, totalAsdos, fetchAsdos, createUsers, deleteUsers, updateUsers };
 };
