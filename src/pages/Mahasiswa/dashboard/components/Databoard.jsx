@@ -9,9 +9,9 @@ const Databoard = () => {
   const { totalMatkul } = useMatkul();
   const { totalJadwal } = useJadwal();
   return (
-    <div className="relative bg-gradient-to-r rounded-lg from-blue-600 to-blue-800 text-white pb-8">
+    <div className="relative bg-gradient-to-r rounded-bl-[100px] rounded-lg md:rounded-lg from-blue-600 to-blue-800 text-white pb-8">
       <div className="absolute inset-0 overflow-hidden">
-        <img src={bgsiswa} alt="dashboard background" className="w-full h-full object-cover opacity-20" />
+        <img src={bgsiswa} alt="dashboard background" className="w-full rounded-bl-[100px] rounded-lg md:rounded-lg h-full object-cover opacity-20" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

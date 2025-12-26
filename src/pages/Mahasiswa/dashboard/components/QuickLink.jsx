@@ -29,7 +29,7 @@ const QuickLink = () => {
           <span className="text-xs text-gray-700 font-medium">Absensi</span>
         </button>
 
-        <button onClick={() => infoAlert()} className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+        <button onClick={() => infoAlert('Mohon maaf fitur ini sedang diperbaiki')} className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
           <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-2">
             <FaChartLine className="w-5 h-5 text-orange-600" />
           </div>

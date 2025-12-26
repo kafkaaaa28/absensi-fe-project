@@ -22,9 +22,7 @@ import KelasSiswa from './components/DashboardAdmin/KelasSiswa/KelasSiswa';
 // dosen
 import DosenRoutes from './router/DosenRoutes';
 import DosenDashboard from './pages/Dosen/dashboard/DataboardPage';
-import JadwalDosen from './components/DashboardDosen/Jadwal/JadwalDosen';
-import MatkulDosen from './components/DashboardDosen/Jadwal/MatkulDosen';
-import ProfileDosen from './components/DashboardDosen/Profile/ProfileDosen';
+import MatkulDosenPage from './pages/Dosen/matkul/MatakulDosenPage';
 import KelasMahasiswaPage from './pages/Admin/KelasMahasiswa/KelasMahasiswaPage';
 import ProfileDosenPage from './pages/Dosen/Profile/ProfileDosenPage';
 import JadwalDosenPage from './pages/Dosen/jadwal/JadwalDosenPage';
@@ -85,7 +83,7 @@ function App() {
         <Route path="/dashboardDosen/*" element={isAuthenticated && user?.role === 'dosen' ? <DosenRoutes /> : <Navigate to="/" />}>
           <Route index element={<DosenDashboard />} />
           <Route path="jadwalSaya" element={<JadwalDosenPage />} />
-          <Route path="MatkulSaya" element={<MatkulDosen />} />
+          <Route path="MatkulSaya" element={<MatkulDosenPage />} />
           <Route path="ProfileSaya" element={<ProfileDosenPage />} />
         </Route>
         <Route path="/dashboard/*" element={isAuthenticated && user?.role === 'siswa' ? <MahasiswaRoutes /> : <Navigate to="/" />}>

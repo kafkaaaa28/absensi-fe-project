@@ -1,67 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'flowbite-react';
-import api from '../../../utils/api';
-import Swal from 'sweetalert2';
+
 import { FaCalendarAlt, FaUsers, FaSearch, FaIdCard, FaClipboardCheck } from 'react-icons/fa';
 
-const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
-  const [formData, setFormData] = useState({ ...data });
-  const [date, setDate] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [postTanggal, setPostTanggal] = useState({ tanggal: '' });
-  const [absensi, setAbsensi] = useState([]);
-
+const ModalLihatAbsenPerkelas = ({ data, showModalAbsen, dataAbsenPerkelas, tanggalAbsen, fetchTanggalAbsen, onFetchAbsen, resetForm, postTanggal, handleChange, loading }) => {
   useEffect(() => {
-    setFormData({ ...data });
+    if (data?.id_kelas) {
+      fetchTanggalAbsen(data.id_kelas);
+    }
   }, [data]);
 
-  useEffect(() => {
-    if (formData.id_kelas) {
-      fetchTanggal();
-    }
-  }, [formData.id_kelas]);
-
-  const handleChange = (e) => {
-    setPostTanggal({ ...postTanggal, [e.target.name]: e.target.value });
-  };
-
-  const fetchTanggal = async () => {
-    try {
-      const res = await api.get(`/dosen/absensi/tanggal/${formData.id_kelas}`);
-      setDate(res.data || []);
-    } catch (err) {
-      console.log(`error ambil tanggal ${err.response?.data?.message}`);
-    }
-  };
-
   const fetchAllAbsen = async (e) => {
-    if (e) e.preventDefault();
-
-    if (!postTanggal.tanggal) {
-      Swal.fire({
-        text: 'Silahkan Pilih Tanggal',
-        icon: 'question',
-        confirmButtonText: 'OK',
-        customClass: {
-          confirmButton: 'px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700',
-        },
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const dates = new Date(postTanggal.tanggal);
-      const formattedDate = dates.toISOString().split('T')[0];
-
-      const res = await api.get(`/dosen/absensi/Allsiswa/${formData.id_kelas}/${formattedDate}`);
-      setAbsensi(res.data || []);
-    } catch (err) {
-      console.log(`error ambil Absen ${err.response?.data?.message || err.message}`);
-      setAbsensi([]);
-    } finally {
-      setLoading(false);
-    }
+    e.preventDefault();
+    onFetchAbsen(data.id_kelas);
   };
 
   const getStatusColor = (status) => {
@@ -75,25 +26,21 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   };
 
   const calculateStats = () => {
-    const total = absensi.length;
-    const hadir = absensi.filter((a) => a.status === 'hadir').length;
-    const izin = absensi.filter((a) => a.status === 'izin').length;
-    const sakit = absensi.filter((a) => a.status === 'sakit').length;
-    const alpha = absensi.filter((a) => a.status === 'alpha').length;
+    const list = dataAbsenPerkelas || [];
 
-    return { total, hadir, izin, sakit, alpha };
+    return {
+      total: list.length,
+      hadir: list.filter((a) => a.status === 'hadir').length,
+      izin: list.filter((a) => a.status === 'izin').length,
+      sakit: list.filter((a) => a.status === 'sakit').length,
+      alpha: list.filter((a) => a.status === 'alpha').length,
+    };
   };
 
   const stats = calculateStats();
 
-  const resetForm = () => {
-    setAbsensi([]);
-    setPostTanggal({ tanggal: '' });
-    OnClose(false);
-  };
-
   return (
-    <Modal show={modalLihat} onClose={resetForm} size="3xl">
+    <Modal show={showModalAbsen} onClose={resetForm} size="3xl">
       <ModalHeader className="border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
@@ -103,16 +50,14 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
             <div>
               <h3 className="text-lg font-bold text-gray-900">Rekap Absensi</h3>
               <p className="text-sm text-gray-600">
-                {formData.nama_matkul} • {formData.nama_kelas}
+                {data?.nama_matkul} • {data?.nama_kelas}
               </p>
             </div>
           </div>
         </div>
       </ModalHeader>
 
-      {/* Modal Body */}
       <ModalBody className="px-6 py-4">
-        {/* Filter Section */}
         <div className="bg-gray-50 rounded-lg p-4 mb-4">
           <div className="flex items-center gap-2 mb-3">
             <FaCalendarAlt className="w-4 h-4 text-gray-600" />
@@ -132,8 +77,8 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
                     name="tanggal"
                     value={postTanggal.tanggal}
                   >
-                    <option value="">Pilih tanggal absensi</option>
-                    {date.map((waktu, index) => (
+                    <option value="">Pilih tanggal</option>
+                    {tanggalAbsen.map((waktu, index) => (
                       <option key={index} value={waktu.tanggal}>
                         {waktu.tanggal
                           ? new Date(waktu.tanggal).toLocaleDateString('id-ID', {
@@ -168,8 +113,7 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
           </form>
         </div>
 
-        {/* Stats Summary */}
-        {absensi.length > 0 && (
+        {dataAbsenPerkelas.length > 0 && (
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-2">
               <FaUsers className="w-4 h-4 text-gray-600" />
@@ -201,10 +145,10 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
         )}
 
         <div className="overflow-x-auto">
-          {absensi.length === 0 ? (
+          {dataAbsenPerkelas.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8">
               <FaClipboardCheck className="w-12 h-12 text-gray-300 mb-3" />
-              <p className="text-gray-500 text-sm font-medium">{postTanggal.tanggal ? 'Tidak ada data absensi' : 'Pilih tanggal untuk melihat absensi'}</p>
+              <p className="text-gray-500 text-sm font-medium">{postTanggal.tanggal ? 'Tidak ada data dataAbsenPerkelas' : 'Pilih tanggal untuk melihat dataAbsenPerkelas'}</p>
               <p className="text-gray-400 text-xs mt-1">{postTanggal.tanggal ? 'Belum ada mahasiswa yang absen' : 'Pilih tanggal dari dropdown di atas'}</p>
             </div>
           ) : (
@@ -227,7 +171,7 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {absensi.map((item, index) => (
+                {dataAbsenPerkelas.map((item, index) => (
                   <tr key={index} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-2.5">
                       <p className="text-gray-800 text-sm font-medium">{item.nama}</p>
@@ -252,10 +196,9 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
         </div>
       </ModalBody>
 
-      {/* Modal Footer */}
       <ModalFooter className="border-t border-gray-200 px-6 py-4">
         <div className="w-full flex justify-between items-center">
-          <div className="text-xs text-gray-500">{absensi.length > 0 && <span>Menampilkan {absensi.length} mahasiswa</span>}</div>
+          <div className="text-xs text-gray-500">{dataAbsenPerkelas.length > 0 && <span>Menampilkan {dataAbsenPerkelas.length} mahasiswa</span>}</div>
           <button onClick={resetForm} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
             Tutup
           </button>
@@ -265,4 +208,4 @@ const LihatAbsensi = ({ data, modalLihat, OnClose }) => {
   );
 };
 
-export default LihatAbsensi;
+export default ModalLihatAbsenPerkelas;

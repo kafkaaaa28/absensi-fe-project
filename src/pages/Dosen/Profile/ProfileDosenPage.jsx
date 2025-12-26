@@ -15,12 +15,12 @@ const ProfileDosenPage = () => {
     {
       icon: <FaUserEdit className="text-blue-500 text-2xl" />,
       title: 'Edit Profile',
-      action: () => infoAlert(),
+      action: () => infoAlert('Mohon maaf fitur ini sedang diperbaiki'),
     },
     {
       icon: <FaLock className="text-yellow-500 text-2xl" />,
       title: 'Ubah Password',
-      action: () => infoAlert(),
+      action: () => infoAlert('Mohon maaf fitur ini sedang diperbaiki'),
     },
     {
       icon: <FaBookOpen className="text-green-500 text-2xl" />,

@@ -3,11 +3,9 @@ import { KelasSiswa, AbsensiSiswa, statusAbsensi, CekDaftarFace } from '../../ap
 const useAbsensi = () => {
   const [dataKelas, setDataKelas] = useState([]);
   const [dataAbsen, setDataAbsen] = useState([]);
-  const [statusMap, setStatusMap] = useState({});
   const [loadingKelas, setLoadingkelas] = useState(false);
   const [loadingAbsen, setLoadingAbsen] = useState(false);
   const [error, setError] = useState(null);
-
   const fetchKelas = async () => {
     setLoadingkelas(true);
     setError(null);
@@ -54,34 +52,21 @@ const useAbsensi = () => {
   const cekFace = async () => {
     try {
       const res = await CekDaftarFace();
-
-      if (res.data && res.data.hasface === true) {
+      if (res.data.hasFace === true && res.data.success === true) {
         return true;
+      } else {
+        return false;
       }
-
-      return false;
     } catch (err) {
       console.error(err);
       return false;
     }
   };
-  const fetchStatusAbsen = async () => {
-    try {
-      const res = await statusAbsensi();
-      const statusObj = {};
-      res.data.data.forEach((item) => {
-        statusObj[item.id_kelas] = item.status;
-      });
-      setStatusMap(statusObj);
-    } catch (err) {
-      console.log('Gagal ambil status:', err.response?.data?.message || err.message);
-    }
-  };
+
   useEffect(() => {
     fetchKelas();
-    fetchStatusAbsen();
   }, []);
-  return { dataKelas, dataAbsen, statusMap, loadingAbsen, loadingKelas, error, setStatusMap, fetchAbsen, cekFace, fetchStatusAbsen };
+  return { dataKelas, dataAbsen, loadingAbsen, loadingKelas, error, fetchAbsen, cekFace };
 };
 
 export default useAbsensi;

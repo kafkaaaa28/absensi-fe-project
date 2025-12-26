@@ -3,8 +3,10 @@ import { useDosen } from '../../../hooks/Dosen/useDosen';
 import { FaSearch } from 'react-icons/fa';
 import TableJadwalDosen from './components/TableJadwalDosen';
 import LoadingPage from '../../../components/common/LoadingPage';
+import { useAuth } from '../../../context/AuthContext';
 const JadwalDosenPage = () => {
-  const { dataJadwal, loading } = useDosen();
+  const { dataJadwal } = useDosen();
+  const { loading } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const getHariColor = (hari) => {
     const colors = {

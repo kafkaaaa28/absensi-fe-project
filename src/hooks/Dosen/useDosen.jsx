@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getJadwalDosen, getKelasDosen, ApiBukaAbsen, ApiUpdateAbsen, JadwalDosenHariIni, ApiFaceEmbedding, ApiUpdateAbsenFace, getMahasiswa, JadwalDosen } from '../../api/Dosen/DosenApi';
+import { getJadwalDosen, getKelasDosen, ApiBukaAbsen, ApiUpdateAbsen, JadwalDosenHariIni, ApiFaceEmbedding, ApiUpdateAbsenFace, getMahasiswa, getSiswaPerkelas, TanggalAbsen, AbsenPerKelas } from '../../api/Dosen/DosenApi';
 export const useDosen = () => {
   const [dataSiswa, setDataSiswa] = useState([]);
   const [dataJadwal, setDataJadwal] = useState([]);
@@ -10,6 +10,10 @@ export const useDosen = () => {
   const [totalJadwal, setTotalJadwal] = useState(0);
   const [idJadwal, setIdJadwal] = useState(null);
   const [idKelas, setIdKelas] = useState(null);
+  const [loadingSiswa, setLoadingSiswa] = useState(false);
+  const [dataSiswaPerkelas, setDatasiswaPerkelas] = useState([]);
+  const [tanggalAbsen, setTanggalAbsen] = useState([]);
+  const [dataAbsenPerkelas, setDataAbsenPerkelas] = useState([]);
   const fetchJadwal = async () => {
     setLoading(true);
     try {
@@ -48,9 +52,42 @@ export const useDosen = () => {
   const fetchSiswa = async (idJadwal, idKelas) => {
     try {
       const res = await getMahasiswa(idJadwal, idKelas);
-      setDataSiswa(res.data);
+      const { data } = res.data;
+      setDataSiswa(data);
     } catch (err) {
       console.log(err);
+    }
+  };
+  const fetchSiswaPerkelas = async (idKelas) => {
+    if (!idKelas) return;
+    setLoadingSiswa(true);
+    try {
+      const res = await getSiswaPerkelas(idKelas);
+      const { data } = res.data;
+      setDatasiswaPerkelas(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingSiswa(false);
+    }
+  };
+  const fetchTanggalAbsen = async (idKelas) => {
+    if (!idKelas) return;
+    try {
+      const res = await TanggalAbsen(idKelas);
+      const { data } = res.data;
+      setTanggalAbsen(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetchAbsenPerkelas = async (idKelas, date) => {
+    try {
+      const res = await AbsenPerKelas(idKelas, date);
+      const { data } = res.data;
+      setDataAbsenPerkelas(data);
+    } catch (err) {
+      console.error(err);
     }
   };
   useEffect(() => {
@@ -65,5 +102,30 @@ export const useDosen = () => {
     }
   }, [idJadwal, idKelas]);
 
-  return { dataSiswa, setDataSiswa, dataJadwal, dataKelas, loading, totalKelas, totalJadwal, fetchJadwal, fetchKelas, ApiBukaAbsen, ApiUpdateAbsen, jadwalharini, ApiFaceEmbedding, ApiUpdateAbsenFace, getMahasiswa, fetchSiswa };
+  return {
+    dataSiswa,
+    setDataSiswa,
+    dataJadwal,
+    dataKelas,
+    loading,
+    totalKelas,
+    totalJadwal,
+    dataSiswaPerkelas,
+    loadingSiswa,
+    tanggalAbsen,
+    dataAbsenPerkelas,
+    fetchTanggalAbsen,
+    fetchAbsenPerkelas,
+    fetchSiswaPerkelas,
+    fetchJadwal,
+    fetchKelas,
+    ApiBukaAbsen,
+    ApiUpdateAbsen,
+    jadwalharini,
+    ApiFaceEmbedding,
+    ApiUpdateAbsenFace,
+    getMahasiswa,
+    fetchSiswa,
+    getSiswaPerkelas,
+  };
 };

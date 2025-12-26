@@ -18,7 +18,6 @@ export const AbsensiProvider = ({ children }) => {
         });
         setStatusMap(map);
       }
-      console.log(statusMap);
     } catch (err) {
       console.error('Gagal ambil status:', err);
     }
@@ -43,7 +42,7 @@ export const AbsensiProvider = ({ children }) => {
   );
 };
 
-export const useAbsensi = () => {
+export const useAbsensiContext = () => {
   const ctx = useContext(AbsensiContext);
   if (!ctx) throw new Error('useAbsensi harus dipakai di dalam AbsensiProvider');
   return ctx;

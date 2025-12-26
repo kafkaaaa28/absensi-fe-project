@@ -14,7 +14,6 @@ const Admin = ({ setIsAuthenticated, setUser }) => {
   const cekFaceData = async () => {
     try {
       const res = await api.get(`/siswa/cek-daftar`);
-
       if (res.data.hasFace) {
         setModalFace(false);
       } else {

@@ -1,14 +1,24 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/common/Sidebar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
 import Swal from 'sweetalert2';
 import { useAuth } from '../context/AuthContext';
-import { useAbsensi } from '../context/AbsensiContext ';
-
+import { useAbsensiContext } from '../context/AbsensiContext ';
+import useAbsensi from '../hooks/Siswa/useAbsensi';
+import { modalcekface } from '../utils/alerts';
+import ModalDaftarWajah from '../pages/Mahasiswa/components/ModalDaftarWajah';
 export default function MahasiswaLayout() {
   const { user } = useAuth();
-  const { setStatusMap } = useAbsensi();
+  const { setStatusMap } = useAbsensiContext();
+  const { cekFace } = useAbsensi();
+  const [showModal, setShowModal] = useState(false);
+  const handleCek = async (data) => {
+    const result = await modalcekface(data);
+    if (result.isConfirmed) {
+      setShowModal(true);
+    }
+  };
   useEffect(() => {
     if (!user?.id_siswa) return;
 
@@ -47,13 +57,23 @@ export default function MahasiswaLayout() {
       pusher.disconnect();
     };
   }, [user?.id_siswa]);
+  useEffect(() => {
+    const checkFace = async () => {
+      const hasFace = await cekFace();
+      if (!hasFace) {
+        handleCek('Silakan lakukan verifikasi wajah');
+      }
+    };
 
+    checkFace();
+  }, []);
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2]">
       <Sidebar />
-      <div className="ml-[20px] mr-[20px] md:ml-[270px] md:mr-[20px] pb-8 mt-5 sm:mt-20">
+      <div className="ml-[20px] mr-[20px] md:ml-[270px] md:mr-[20px] pb-8 mt-4 sm:mt-20">
         <Outlet />
       </div>
+      <ModalDaftarWajah showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 }

@@ -3,14 +3,14 @@ import LoadingPage from '../../../components/common/LoadingPage';
 import { useAuth } from '../../../context/AuthContext';
 import Databoard from './components/Databoard';
 import useJadwal from '../../../hooks/Siswa/useJadwal';
-import { useAbsensi } from '../../../context/AbsensiContext ';
+import { useAbsensiContext } from '../../../context/AbsensiContext ';
 import TabelJadwalHariini from './components/TabelJadwalHariini';
 import StatusAkademik from './components/StatusAkademik';
 import QuickLink from './components/QuickLink';
 const DataBoardPage = () => {
   const { loading } = useAuth();
   const { jadwalSiswaHariIni, loadingJadwal } = useJadwal();
-  const { statusMap } = useAbsensi();
+  const { statusMap } = useAbsensiContext();
   const hariIni = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
     day: 'numeric',

@@ -5,7 +5,7 @@ import { Spinner } from 'flowbite-react';
 const TabelJadwalHariini = ({ data, statusMap, hariIni, loading }) => {
   const navigate = useNavigate();
   return (
-    <div className="bg-white rounded-lg border mt-4 border-gray-200 overflow-hidden">
+    <div className="bg-white  rounded-lg border mt-4 border-gray-200 overflow-hidden">
       <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

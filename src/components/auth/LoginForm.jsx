@@ -44,7 +44,7 @@ export default function LoginForm({ onSubmit, loading, error }) {
           <label htmlFor="password" className="text-xs font-medium text-gray-700">
             Password
           </label>
-          <button onClick={() => infoAlert()} type="button" className="text-xs text-blue-600 hover:text-blue-500">
+          <button onClick={() => infoAlert('Mohon maaf fitur ini sedang diperbaiki')} type="button" className="text-xs text-blue-600 hover:text-blue-500">
             Forgot?
           </button>
         </div>
@@ -92,7 +92,7 @@ export default function LoginForm({ onSubmit, loading, error }) {
       <div className="text-center">
         <p className="text-xs text-gray-600">
           Don't have an account?{' '}
-          <button onClick={() => infoAlert()} type="button" className="text-blue-600 hover:text-blue-500 font-medium">
+          <button onClick={() => infoAlert('Mohon maaf fitur ini sedang diperbaiki')} type="button" className="text-blue-600 hover:text-blue-500 font-medium">
             Contact Admin
           </button>
         </p>

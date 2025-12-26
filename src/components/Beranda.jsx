@@ -68,7 +68,7 @@ const Beranda = () => {
               <FaMobileAlt className="w-4 h-4" />
               Mulai Absensi Sekarang
             </button>
-            <button onClick={infoAlert} className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-all border border-white/30">
+            <button onClick={() => infoAlert('Mohon maaf fitur ini sedang diperbaiki')} className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-all border border-white/30">
               Pelajari Lebih Lanjut
             </button>
           </div>

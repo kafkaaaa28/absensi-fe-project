@@ -1,42 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'flowbite-react';
-import api from '../../../utils/api';
-import { FaUsers, FaIdCard, FaCalendar, FaUserGraduate, FaTimes } from 'react-icons/fa';
+import { Modal, ModalBody, ModalHeader } from 'flowbite-react';
+import { FaUsers, FaIdCard, FaCalendar, FaUserGraduate } from 'react-icons/fa';
 
-const ModalDetail = ({ data, modalLihat, OnClose }) => {
-  const [formData, setFormData] = useState({ ...data });
-  const [dataSiswa, setSiswaData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
+const ModalSiswaPerkelas = ({ data, showModalSiswa, onClose, dataSiswaPerkelas, fetchSiswaPerkelas, loadingSiswa }) => {
   useEffect(() => {
-    setFormData({ ...data });
-  }, [data]);
-
-  useEffect(() => {
-    if (formData.id_kelas && modalLihat) {
-      fetchSiswa();
+    if (data?.id_kelas && showModalSiswa) {
+      fetchSiswaPerkelas(data.id_kelas);
     }
-  }, [formData.id_kelas, modalLihat]);
+  }, [data, showModalSiswa]);
 
-  const fetchSiswa = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/dosen/siswakelas/${formData.id_kelas}`);
-      setSiswaData(response.data || []);
-    } catch (err) {
-      console.error('Gagal mengambil data Siswa:', err.response?.data?.message || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getTotalMahasiswa = () => {
-    return dataSiswa.length;
-  };
+  const getTotalMahasiswa = () => dataSiswaPerkelas?.length || 0;
 
   return (
-    <Modal show={modalLihat} onClose={() => OnClose(false)} size="xl">
-      {/* Modal Header */}
+    <Modal show={showModalSiswa} onClose={onClose} size="xl">
       <ModalHeader className="border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
@@ -46,19 +22,14 @@ const ModalDetail = ({ data, modalLihat, OnClose }) => {
             <div>
               <h3 className="text-lg font-bold text-gray-900">Daftar Mahasiswa</h3>
               <p className="text-sm text-gray-600">
-                {formData.nama_matkul} • {formData.nama_kelas}
+                {data?.nama_matkul || '-'} • {data?.nama_kelas || '-'}
               </p>
             </div>
           </div>
-          <button onClick={() => OnClose(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-            <FaTimes className="w-5 h-5" />
-          </button>
         </div>
       </ModalHeader>
 
-      {/* Modal Body */}
       <ModalBody className="px-6 py-4">
-        {/* Summary Stats */}
         <div className="bg-gray-50 rounded-lg p-4 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -72,8 +43,7 @@ const ModalDetail = ({ data, modalLihat, OnClose }) => {
           </div>
         </div>
 
-        {/* Loading State */}
-        {loading ? (
+        {loadingSiswa ? (
           <div className="flex justify-center items-center py-12">
             <div className="text-center">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-3"></div>
@@ -81,9 +51,8 @@ const ModalDetail = ({ data, modalLihat, OnClose }) => {
             </div>
           </div>
         ) : (
-          /* Table Section */
           <div className="overflow-x-auto">
-            {dataSiswa.length === 0 ? (
+            {dataSiswaPerkelas.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <FaUsers className="w-16 h-16 text-gray-300 mb-4" />
                 <h4 className="text-gray-700 font-medium mb-2">Belum ada mahasiswa</h4>
@@ -111,11 +80,10 @@ const ModalDetail = ({ data, modalLihat, OnClose }) => {
                         <span>Semester</span>
                       </div>
                     </th>
-                    <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {dataSiswa.map((item, index) => (
+                  {dataSiswaPerkelas.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-2">
@@ -131,9 +99,6 @@ const ModalDetail = ({ data, modalLihat, OnClose }) => {
                       <td className="px-4 py-2.5">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-xs font-medium">Sem {item.semester}</span>
                       </td>
-                      <td className="px-4 py-2.5">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-medium">Aktif</span>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -142,18 +107,8 @@ const ModalDetail = ({ data, modalLihat, OnClose }) => {
           </div>
         )}
       </ModalBody>
-
-      {/* Modal Footer */}
-      <ModalFooter className="border-t border-gray-200 px-6 py-4">
-        <div className="w-full flex justify-between items-center">
-          <div className="text-xs text-gray-500">{!loading && dataSiswa.length > 0 && <span>Menampilkan {dataSiswa.length} mahasiswa</span>}</div>
-          <button onClick={() => OnClose(false)} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
-            Tutup
-          </button>
-        </div>
-      </ModalFooter>
     </Modal>
   );
 };
 
-export default ModalDetail;
+export default ModalSiswaPerkelas;

@@ -16,10 +16,20 @@ export const ErrAlert = (data) => {
   });
 };
 
-export const infoAlert = () => {
+export const infoAlert = (data) => {
   Swal.fire({
     icon: 'info',
     title: 'Informasi',
-    text: 'Mohon maaf fitur ini sedang diperbaiki',
+    text: data,
+    allowOutsideClick: false,
+  });
+};
+export const modalcekface = (data) => {
+  return Swal.fire({
+    icon: 'info',
+    title: 'Informasi',
+    text: data,
+    allowOutsideClick: false,
+    confirmButtonText: 'OK',
   });
 };
