@@ -27,6 +27,10 @@ const ModalEditDosen = ({ dosen, loading, onSubmit, isOpen, onClose }) => {
               <input className="w-full border px-3 py-2 rounded" name="nama" value={formData.nama} onChange={handleChange} />
             </div>
             <div>
+              <label className="block mb-1 font-medium">Email</label>
+              <input className="w-full border px-3 py-2 rounded" name="email" value={formData.email} onChange={handleChange} />
+            </div>
+            <div>
               <label className="block mb-1 font-medium">Fakultas</label>
               <input className="w-full border px-3 py-2 rounded" name="fakultas" value={formData.fakultas} onChange={handleChange} />
             </div>

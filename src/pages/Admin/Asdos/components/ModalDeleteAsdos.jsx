@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'flowbite-react';
 
-const ModalDelete = ({ modaldelete, data, onDelete, setModaldelete, loading }) => {
+const ModalDeleteAsdos = ({ isOpen, data, onDelete, onClose, loading }) => {
   const [selectedAsdos, setSelectedAsdos] = useState({ ...data });
   useEffect(() => {
     setSelectedAsdos({ ...data });
@@ -13,7 +13,7 @@ const ModalDelete = ({ modaldelete, data, onDelete, setModaldelete, loading }) =
   };
 
   return (
-    <Modal show={modaldelete} onClose={() => setModaldelete(false)}>
+    <Modal show={isOpen} onClose={onClose}>
       <ModalHeader className="bg-white">
         <h2 className="text-xl font-bold text-black text-center">Delete Dosen</h2>
       </ModalHeader>
@@ -25,7 +25,7 @@ const ModalDelete = ({ modaldelete, data, onDelete, setModaldelete, loading }) =
           <button onClick={handleDelete} className="w-full bg-red-600 text-white py-3 rounded hover:bg-red-700">
             {loading ? 'Menghapus...' : 'Hapus'}
           </button>
-          <button onClick={() => setModaldelete(false)} className="w-full bg-gray-300 text-black py-3 rounded hover:bg-gray-400">
+          <button onClick={onClose} className="w-full bg-gray-300 text-black py-3 rounded hover:bg-gray-400">
             Batal
           </button>
         </div>
@@ -34,4 +34,4 @@ const ModalDelete = ({ modaldelete, data, onDelete, setModaldelete, loading }) =
   );
 };
 
-export default ModalDelete;
+export default ModalDeleteAsdos;

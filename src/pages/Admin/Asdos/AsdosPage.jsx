@@ -6,9 +6,11 @@ import { ErrAlert, showAlert } from '../../../utils/alerts';
 import ModalEditAsdos from './components/ModalEditAsdos';
 import ModalDeleteAsdos from './components/ModalDeleteAsdos';
 import LoadingPage from '../../../components/common/LoadingPage';
+import { useMahasiswa } from '../../../hooks/Admin/useMahasiswa';
 
 const AsdosPage = () => {
   const { dataAsdos, loading, createUsers, fetchAsdos, deleteUsers, updateUsers } = useAsdos();
+  const { dataMahasiswa } = useMahasiswa();
   const [error, setError] = useState(null);
   const [search, setSearchTerm] = useState('');
   const [selected, setSelected] = useState(null);
@@ -31,6 +33,7 @@ const AsdosPage = () => {
           setIsOpen={setIsOpen}
           isOpen={isOpen}
           loading={loadingForm}
+          dataMahasiswa={dataMahasiswa}
           onSubmit={async (data) => {
             setLoadingForm(true);
             try {
@@ -64,10 +67,10 @@ const AsdosPage = () => {
       />
       <ModalEditAsdos
         isOpen={showEdit}
-        asdos={selected}
+        data={selected}
         onClose={() => setShowEdit(false)}
         loading={loadingForm}
-        onSubmit={async (id, data) => {
+        onUpdate={async (id, data) => {
           setLoadingForm(true);
           try {
             const res = await updateUsers(id, data);
@@ -85,7 +88,7 @@ const AsdosPage = () => {
       />
       <ModalDeleteAsdos
         isOpen={showDelete}
-        asdos={selected}
+        data={selected}
         loading={loadingForm}
         onClose={() => setShowDelete(false)}
         onDelete={async (id) => {

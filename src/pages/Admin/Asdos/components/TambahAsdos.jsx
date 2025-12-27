@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button, Label, TextInput } from 'flowbite-react';
-import api from '../../../utils/api';
 import { FaPlus } from 'react-icons/fa';
-import Swal from 'sweetalert2';
 import Select from 'react-select';
 
-function TambahAsdos({ isOpen, setIsOpen, onSuccess }) {
-  const [loading, setLoading] = useState(false);
+function TambahAsdos({ isOpen, setIsOpen, onSubmit, loading, dataMahasiswa }) {
   const [cekMahasiswa, setCekMahasiswa] = useState(false);
-  const [dataSiswa, setDataSiswa] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-
-  const [formData, setFromData] = useState({
-    nama: '',
-    email: '',
-    password: '',
-    id_siswa: '',
-    status: 'aktif',
-    tipe_asdos: '',
-    role: 'asdos',
-  });
-  const { nama, email, password, tipe_asdos, id_siswa, role } = formData;
+  const data = { nama: '', email: '', password: '', nim: '', id_siswa: '', status: 'aktif', tipe_asdos: '', role: 'asdos' };
+  const [formData, setFromData] = useState(data);
+  const { nama, email, password, tipe_asdos } = formData;
   const handleClose = () => setIsOpen(false);
   const handleChange = (e) => {
     setFromData({ ...formData, [e.target.name]: e.target.value });
@@ -30,72 +18,29 @@ function TambahAsdos({ isOpen, setIsOpen, onSuccess }) {
   };
   const change = (option) => {
     setSelectedOption(option);
-    setFromData({ ...formData, id_siswa: option ? option.value : '' });
+
+    setFromData((prev) => ({
+      ...prev,
+      id_siswa: option.value,
+      nama: option.nama,
+      nim: option.nim,
+    }));
   };
-  const options = dataSiswa.map((item) => ({
+
+  const options = dataMahasiswa.map((item) => ({
     value: item.id_siswa,
     label: `${item.nama} || ${item.nim}`,
+    nama: item.nama,
+    nim: item.nim,
   }));
-  const showAlert = () => {
-    Swal.fire({
-      title: 'Berhasil!',
-      icon: 'success',
-    });
-  };
-  const ErrAlert = () => {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Terjadi Error',
-    });
-  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      const res = await api.post('/users/createusers', formData);
-      setIsOpen(false);
-      showAlert();
-      onSuccess();
-      setFromData({
-        nama: '',
-        email: '',
-        password: '',
-        tipe_asdos: '',
-        role: 'asdos',
-        status: 'aktif',
-      });
-    } catch (err) {
-      console.error('Error:', err.response?.data || err.message);
-
-      setIsOpen(false);
-
-      if (err.response && err.response.status === 400) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.response.data.message,
-        });
-      } else {
-        ErrAlert();
-      }
-    } finally {
-      setLoading(false);
-    }
+    onSubmit(formData);
+    setFromData(data);
   };
 
-  const fetchSiswa = async () => {
-    try {
-      const res = await api.get('/users/siswa');
-      setDataSiswa(res.data);
-      console.log(res.data);
-    } catch (err) {
-      console.log(err.response?.data.message);
-    }
-  };
   useEffect(() => {
-    fetchSiswa();
     if (selectedOption) {
       setFromData((prev) => ({ ...prev, id_siswa: selectedOption.value }));
     } else {

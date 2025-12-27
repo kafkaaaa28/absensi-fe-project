@@ -2,8 +2,7 @@ import { FaRegEdit, FaRegTrashAlt, FaUser, FaIdCard, FaCheckCircle, FaUserTag, F
 
 const DosenTable = ({ data, loading, search, onEdit, onDelete }) => {
   const filtered = data.filter((m) => m.nama.toLowerCase().includes(search.toLowerCase()));
-
-  // Fungsi untuk menentukan warna status
+  console.log(data);
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'aktif':
@@ -15,7 +14,6 @@ const DosenTable = ({ data, loading, search, onEdit, onDelete }) => {
     }
   };
 
-  // Fungsi untuk menentukan warna tipe asdos
   const getTipeColor = (tipe) => {
     switch (tipe?.toLowerCase()) {
       case 'mahasiswa':
@@ -27,7 +25,6 @@ const DosenTable = ({ data, loading, search, onEdit, onDelete }) => {
     }
   };
 
-  // Fungsi untuk menentukan icon tipe asdos
   const getTipeIcon = (tipe) => {
     switch (tipe?.toLowerCase()) {
       case 'mahasiswa':
@@ -39,7 +36,6 @@ const DosenTable = ({ data, loading, search, onEdit, onDelete }) => {
     }
   };
 
-  // Fungsi untuk format display tipe asdos
   const formatTipeAsdos = (tipe) => {
     switch (tipe?.toLowerCase()) {
       case 'mahasiswa':
@@ -124,7 +120,7 @@ const DosenTable = ({ data, loading, search, onEdit, onDelete }) => {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <code className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono">{item.nim || '-'}</code>
+                    <code className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono">{item.nim || 'Bukan Mahasiswa'}</code>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
