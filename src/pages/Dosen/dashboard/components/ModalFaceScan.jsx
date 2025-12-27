@@ -127,6 +127,8 @@ const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
     });
 
     cameraRef.current.start();
+    videoRef.current.style.filter = 'brightness(1.1) contrast(1.2)';
+
     setLoading(false);
   };
 
