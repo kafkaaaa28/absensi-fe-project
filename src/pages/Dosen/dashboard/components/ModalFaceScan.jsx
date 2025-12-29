@@ -8,7 +8,6 @@ import api from '../../../../utils/api';
 const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
   // untuk list yang sudah absen
   const [absenBerhasilList, setAbsenBerhasilList] = useState([]);
   const videoRef = useRef(null);
@@ -298,6 +297,8 @@ const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
                 kelasId: data.id_kelas,
                 jadwalId: data.id_jadwal,
                 nim: match.nim,
+                nama_matkul: data.nama_matkul,
+                nama_kelas: data.nama_kelas,
               });
             } catch (err) {
               console.error('Gagal absen untuk:', match.name, err);

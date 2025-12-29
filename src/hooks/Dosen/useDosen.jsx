@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getJadwalDosen, getKelasDosen, ApiBukaAbsen, ApiUpdateAbsen, JadwalDosenHariIni, ApiFaceEmbedding, ApiUpdateAbsenFace, getMahasiswa, getSiswaPerkelas, TanggalAbsen, AbsenPerKelas } from '../../api/Dosen/DosenApi';
+import { getJadwalDosen, getKelasDosen, ApiBukaAbsen, ApiUpdateAbsen, JadwalDosenHariIni, ApiFaceEmbedding, ApiUpdateAbsenFace, getMahasiswa, getSiswaPerkelas, TanggalAbsen, AbsenPerKelas, GenerateQr } from '../../api/Dosen/DosenApi';
 export const useDosen = () => {
   const [dataSiswa, setDataSiswa] = useState([]);
   const [dataJadwal, setDataJadwal] = useState([]);
@@ -14,6 +14,8 @@ export const useDosen = () => {
   const [dataSiswaPerkelas, setDatasiswaPerkelas] = useState([]);
   const [tanggalAbsen, setTanggalAbsen] = useState([]);
   const [dataAbsenPerkelas, setDataAbsenPerkelas] = useState([]);
+  const [tokenQr, setTokenQr] = useState('');
+  const [loadingTokenQr, setloadingTokenQr] = useState(false);
   const fetchJadwal = async () => {
     setLoading(true);
     try {
@@ -90,6 +92,18 @@ export const useDosen = () => {
       console.error(err);
     }
   };
+  const fetchTokenQr = async (id_kelas, id_jadwal) => {
+    setloadingTokenQr(true);
+    try {
+      const res = await GenerateQr({ id_kelas, id_jadwal });
+      const { token, expired_in } = res.data;
+      setTokenQr(token);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setloadingTokenQr(false);
+    }
+  };
   useEffect(() => {
     fetchJadwal();
     fetchKelas();
@@ -127,5 +141,8 @@ export const useDosen = () => {
     getMahasiswa,
     fetchSiswa,
     getSiswaPerkelas,
+    tokenQr,
+    fetchTokenQr,
+    loadingTokenQr,
   };
 };

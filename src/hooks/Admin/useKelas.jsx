@@ -25,7 +25,6 @@ export const useKelas = () => {
     try {
       const res = await getMahasiswaKelas(id);
       setDataMahasiswa(res.data);
-      console.log(res.data);
     } catch (err) {
       console.log(err.res.data.message);
     } finally {

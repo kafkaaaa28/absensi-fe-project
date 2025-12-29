@@ -80,9 +80,6 @@ const ModalDaftarWajah = ({ showModal, setShowModal }) => {
       return { ok: false, reason: 'Wajah terlalu kebawah coba sejajar dengan kamera' };
     }
 
-    // ==============================
-    // 3️⃣ CEK JARAK WAJAH
-    // ==============================
     const faceHeight = chinY - eyeCenterY;
 
     if (faceHeight < 90) {

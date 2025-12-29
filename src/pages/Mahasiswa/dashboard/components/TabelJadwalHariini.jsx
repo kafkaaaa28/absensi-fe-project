@@ -1,8 +1,9 @@
 import React from 'react';
 import { FaCalendarAlt, FaUsers, FaBook, FaClock, FaMapMarkerAlt, FaUserGraduate } from 'react-icons/fa';
+import { MdOutlineQrCode2 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'flowbite-react';
-const TabelJadwalHariini = ({ data, statusMap, hariIni, loading }) => {
+const TabelJadwalHariini = ({ data, statusMap, hariIni, loading, onOpenScan }) => {
   const navigate = useNavigate();
   return (
     <div className="bg-white  rounded-lg border mt-4 border-gray-200 overflow-hidden">
@@ -28,6 +29,9 @@ const TabelJadwalHariini = ({ data, statusMap, hariIni, loading }) => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-2.5 text-left text-gray-700 font-medium">No</th>
+              <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Absensi</th>
+              <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Status</th>
+
               <th className="px-4 py-2.5 text-left text-gray-700 font-medium">
                 <div className="flex items-center gap-1.5">
                   <FaUsers className="w-3.5 h-3.5" />
@@ -58,7 +62,6 @@ const TabelJadwalHariini = ({ data, statusMap, hariIni, loading }) => {
                   <span>Dosen</span>
                 </div>
               </th>
-              <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Status</th>
             </tr>
           </thead>
 
@@ -89,7 +92,26 @@ const TabelJadwalHariini = ({ data, statusMap, hariIni, loading }) => {
                     <td className="px-4 py-2.5">
                       <span className="text-gray-600 text-xs">{index + 1}</span>
                     </td>
-
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-2">
+                        <button onClick={() => onOpenScan(item)} className="bg-blue-100 text-blue-500 text-sm flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-blue-200">
+                          <MdOutlineQrCode2 className="w-6 h-6" /> Scan Prensensi
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <div>
+                          <span
+                            className={`text-xs text-white font-medium px-1.5 py-0.5 rounded ${
+                              status === 'hadir' ? 'bg-green-500' : status === 'sakit' ? 'bg-yellow-500' : status === 'izin' ? 'bg-blue-500' : status === 'alpha' ? 'bg-red-500' : 'bg-gray-500'
+                            }`}
+                          >
+                            {status}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center gap-1.5">
                         <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
@@ -139,20 +161,6 @@ const TabelJadwalHariini = ({ data, statusMap, hariIni, loading }) => {
                           <FaUserGraduate className="w-3 h-3 text-orange-600" />
                         </div>
                         <span className="text-gray-700 text-xs">{item.nama}</span>
-                      </div>
-                    </td>
-
-                    <td className="px-4 py-2.5">
-                      <div className="flex items-center gap-1.5">
-                        <div>
-                          <span
-                            className={`text-xs text-white font-medium px-1.5 py-0.5 rounded ${
-                              status === 'hadir' ? 'bg-green-500' : status === 'sakit' ? 'bg-yellow-500' : status === 'izin' ? 'bg-blue-500' : status === 'alpha' ? 'bg-red-500' : 'bg-gray-500'
-                            }`}
-                          >
-                            {status}
-                          </span>
-                        </div>
                       </div>
                     </td>
                   </tr>

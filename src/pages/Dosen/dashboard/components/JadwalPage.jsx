@@ -5,14 +5,16 @@ import { ErrAlert, showAlert } from '../../../../utils/alerts';
 import ModalAbsenFace from './ModalFaceScan';
 import ModalEditStatusAbsen from './ModalEditStatusAbsen';
 import { ServiceAbsensi } from '../services/Absensi';
+import QrAbsensi from './QrAbsensi';
 const JadwalPage = () => {
-  const { jadwalharini, loading, ApiUpdateAbsen } = useDosen();
+  const { jadwalharini, loading, ApiUpdateAbsen, tokenQr, fetchTokenQr, loadingTokenQr } = useDosen();
   const { handleOpenAbsen, refreshStatus } = ServiceAbsensi();
   const [selectedJadwal, setSelectedJadwal] = useState(null);
   const [showedit, setShowedit] = useState(false);
-  const [OpenScan, setOpenScan] = useState(false);
   const [OpenScanFace, setOpenScanFace] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [OpenQr, setOpenQr] = useState(false);
+
   return (
     <div>
       <TableJadwalHarini
@@ -26,16 +28,16 @@ const JadwalPage = () => {
           setSelectedJadwal(row);
           setOpenScanFace(true);
         }}
-        onOpenScanQr={(row) => {
+        onOpenQr={(row) => {
           setSelectedJadwal(row);
-          setOpenScan(true);
+          setOpenQr(true);
         }}
         onEditAbsen={(row) => {
           setSelectedJadwal(row);
           setShowedit(true);
         }}
       />
-      {/* <QrscanAbsen jadwal={selectedJadwal} modalQrScan={OpenScan} onClose={() => setOpenScan(false)} /> */}
+      <QrAbsensi data={selectedJadwal} loading={loadingTokenQr} OpenQr={OpenQr} tokenQr={tokenQr} fetchTokenQr={fetchTokenQr} onClose={() => setOpenQr(false)} />
       <ModalAbsenFace data={selectedJadwal} modalLihat={OpenScanFace} OnClose={setOpenScanFace} />
       <ModalEditStatusAbsen
         data={selectedJadwal}

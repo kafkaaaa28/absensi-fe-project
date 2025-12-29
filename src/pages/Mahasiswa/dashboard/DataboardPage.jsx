@@ -7,9 +7,14 @@ import { useAbsensiContext } from '../../../context/AbsensiContext ';
 import TabelJadwalHariini from './components/TabelJadwalHariini';
 import StatusAkademik from './components/StatusAkademik';
 import QuickLink from './components/QuickLink';
+import useAbsensi from '../../../hooks/Siswa/useAbsensi';
+import QrScanAbsensi from './components/QrScanAbsensi';
 const DataBoardPage = () => {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
   const { jadwalSiswaHariIni, loadingJadwal } = useJadwal();
+  const { ApiUpdateAbsenQr } = useAbsensi();
+  const [selectedJadwal, setselectedJadwal] = useState(null);
+  const [openScanQr, setopenScanQr] = useState(false);
   const { statusMap } = useAbsensiContext();
   const hariIni = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
@@ -26,14 +31,26 @@ const DataBoardPage = () => {
     );
   }
   return (
-    <div className="min-h-screen bg-gray-50 ">
-      <Databoard />
-      <TabelJadwalHariini data={jadwalSiswaHariIni} statusMap={statusMap} hariIni={hariIni} loading={loadingJadwal} />
-      <div className="grid grid-cols-1 mt-4 lg:grid-cols-2 gap-4">
-        <QuickLink />
-        <StatusAkademik />
+    <>
+      <div className="min-h-screen bg-gray-50 ">
+        <Databoard />
+        <TabelJadwalHariini
+          data={jadwalSiswaHariIni}
+          statusMap={statusMap}
+          hariIni={hariIni}
+          loading={loadingJadwal}
+          onOpenScan={(row) => {
+            setselectedJadwal(row);
+            setopenScanQr(true);
+          }}
+        />
+        <div className="grid grid-cols-1 mt-4 lg:grid-cols-2 gap-4">
+          <QuickLink />
+          <StatusAkademik />
+        </div>
       </div>
-    </div>
+      <QrScanAbsensi data={selectedJadwal} openScanQr={openScanQr} onClose={() => setopenScanQr(false)} user={user} ApiUpdateAbsenQr={ApiUpdateAbsenQr} />
+    </>
   );
 };
 

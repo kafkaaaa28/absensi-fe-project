@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { KelasSiswa, AbsensiSiswa, statusAbsensi, CekDaftarFace } from '../../api/siswa/AbsensiSiswaApi';
+import { KelasSiswa, AbsensiSiswa, statusAbsensi, CekDaftarFace, ApiUpdateAbsenQr } from '../../api/siswa/AbsensiSiswaApi';
 const useAbsensi = () => {
   const [dataKelas, setDataKelas] = useState([]);
   const [dataAbsen, setDataAbsen] = useState([]);
@@ -66,7 +66,7 @@ const useAbsensi = () => {
   useEffect(() => {
     fetchKelas();
   }, []);
-  return { dataKelas, dataAbsen, loadingAbsen, loadingKelas, error, fetchAbsen, cekFace };
+  return { dataKelas, dataAbsen, loadingAbsen, loadingKelas, error, fetchAbsen, cekFace, ApiUpdateAbsenQr };
 };
 
 export default useAbsensi;

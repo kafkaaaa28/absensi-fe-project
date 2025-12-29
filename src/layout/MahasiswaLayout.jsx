@@ -2,12 +2,12 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/common/Sidebar';
 import { useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
-import Swal from 'sweetalert2';
 import { useAuth } from '../context/AuthContext';
 import { useAbsensiContext } from '../context/AbsensiContext ';
 import useAbsensi from '../hooks/Siswa/useAbsensi';
 import { modalcekface } from '../utils/alerts';
 import ModalDaftarWajah from '../pages/Mahasiswa/components/ModalDaftarWajah';
+import { showAlert, ErrAlert } from '../utils/alerts';
 export default function MahasiswaLayout() {
   const { user } = useAuth();
   const { setStatusMap } = useAbsensiContext();
@@ -28,25 +28,27 @@ export default function MahasiswaLayout() {
 
     const channel = pusher.subscribe(`absensi-channel-${user.id_siswa}`);
     const channelQr = pusher.subscribe(`absensi-channel-qr-${user.id_siswa}`);
-
     channel.bind('absen-update', (data) => {
       setStatusMap((prev) => ({
         ...prev,
         [data.id_kelas]: data.status,
       }));
-      Swal.fire({
-        icon: data.success ? 'success' : 'error',
-        title: data.success ? 'Berhasil!' : 'Gagal!',
-        text: data.message,
-      });
+      if (data.success) {
+        showAlert(data.message);
+      } else {
+        ErrAlert(data.message);
+      }
     });
-
     channelQr.bind('absen-qr-update', (data) => {
-      Swal.fire({
-        icon: data.success ? 'success' : 'error',
-        title: data.success ? 'Berhasil!' : 'Gagal!',
-        text: data.message,
-      });
+      setStatusMap((prev) => ({
+        ...prev,
+        [data.id_kelas]: data.status,
+      }));
+      if (data.success) {
+        showAlert(data.message);
+      } else {
+        ErrAlert(data.message);
+      }
     });
 
     return () => {

@@ -2,7 +2,6 @@ import { FaRegEdit, FaRegTrashAlt, FaUser, FaIdCard, FaCheckCircle, FaUserTag, F
 
 const DosenTable = ({ data, loading, search, onEdit, onDelete }) => {
   const filtered = data.filter((m) => m.nama.toLowerCase().includes(search.toLowerCase()));
-  console.log(data);
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'aktif':

@@ -16,7 +16,6 @@ const DataBoardPage = () => {
   const { totalDosen } = useDosen();
   const { totalMatkul } = useMatkul();
   const { totalAsdos } = useAsdos();
-  console.log(totalAsdos);
   const { totalKelas } = useKelas();
 
   const Menu = [
