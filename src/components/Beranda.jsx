@@ -1,9 +1,14 @@
 import React from 'react';
 import bgappease from './img/682940.webp';
+import urlQr from './img/UrlQr.png';
 import Navbar from './Navbar';
 import { FaQrcode, FaUserCheck, FaUniversity, FaChartLine, FaShieldAlt, FaMobileAlt } from 'react-icons/fa';
 import { infoAlert } from '../utils/alerts';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const Beranda = () => {
+  const { logout, isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
   const features = [
     {
       icon: <FaQrcode className="w-8 h-8" />,
@@ -26,13 +31,28 @@ const Beranda = () => {
       description: 'Sistem terenkripsi dengan proteksi data',
     },
   ];
+  const handleDashboard = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    const roleRoutes = {
+      admin: '/dashboardAdmin',
+      siswa: '/dashboard',
+      dosen: '/dashboardDosen',
+      asdos: '/dashboardAsdos',
+    };
+
+    navigate(roleRoutes[user?.role] || '/login');
+  };
 
   return (
     <div className="relative bg-cover bg-center bg-fixed min-h-screen" style={{ backgroundImage: `url(${bgappease})` }}>
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-green-800/60"></div>
 
       <div className="relative z-20">
-        <Navbar />
+        <Navbar isAuthenticated={isAuthenticated} handleDashboard={handleDashboard} user={user} logout={logout} navigate={navigate} />
       </div>
 
       <div className="relative z-10 w-full min-h-screen flex flex-col justify-center items-center px-4 py-16">
@@ -49,7 +69,7 @@ const Beranda = () => {
 
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">Sistem absensi modern berbasis QR Code dan Face Embedding untuk efisiensi kampus</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
             {features.map((feature, index) => (
               <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all">
                 <div className="flex items-center gap-3 mb-3">
@@ -62,9 +82,16 @@ const Beranda = () => {
               </div>
             ))}
           </div>
+          <div className="my-3 hidden  sm:flex flex-col items-center">
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:scale-105 transition-all duration-300">
+              <img src={urlQr} alt="QR Absensi" className="w-40 h-40 object-contain mx-auto" />
+              <p className="mt-4 text-white font-semibold text-sm text-center">Scan QR untuk Absensi</p>
+              <p className="text-white/70 text-xs text-center mt-1">Arahkan kamera ke QR Code</p>
+            </div>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg">
+            <button onClick={handleDashboard} className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg">
               <FaMobileAlt className="w-4 h-4" />
               Mulai Absensi Sekarang
             </button>

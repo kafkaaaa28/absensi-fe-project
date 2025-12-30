@@ -5,11 +5,22 @@ import { infoAlert } from '../../utils/alerts';
 export default function LoginForm({ onSubmit, loading, error }) {
   const [showPass, setShowPass] = useState(false);
   const [form, setForm] = useState({
-    email: '',
+    identifier: '',
     password: '',
   });
+  const [identifierType, setIdentifierType] = useState('');
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setForm({ ...form, [e.target.name]: value });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === 'identifier') {
+      setIdentifierType(detectIdentifierType(value));
+    }
+  };
+  const detectIdentifierType = (input) => {
+    if (input.includes('@')) return 'email';
+    if (/^\d+$/.test(input)) return 'nim';
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,26 +30,27 @@ export default function LoginForm({ onSubmit, loading, error }) {
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="space-y-1">
-        <label htmlFor="email" className="text-xs font-medium text-gray-700">
-          Email Address
+        <label htmlFor="identifier" className="text-xs font-medium text-gray-700">
+          Email atau NIM
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <MdEmail className="h-4 w-4 text-gray-400" />
           </div>
           <input
-            id="email"
-            type="email"
-            name="email"
-            value={form.email}
+            id="identifier"
+            type="text"
+            name="identifier"
+            value={form.identifier}
             onChange={handleChange}
-            placeholder="Enter your email"
+            placeholder="Masukkan Email atau NIM"
             className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
             required
           />
         </div>
       </div>
 
+      {/* Password */}
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <label htmlFor="password" className="text-xs font-medium text-gray-700">
@@ -58,7 +70,7 @@ export default function LoginForm({ onSubmit, loading, error }) {
             name="password"
             value={form.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder="Masukkan Password"
             className="w-full pl-9 pr-10 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
             required
           />

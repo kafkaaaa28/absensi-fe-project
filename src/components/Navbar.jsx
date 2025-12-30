@@ -1,35 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import logo from './img/univ.png';
 import { FaUser, FaSignOutAlt, FaSignInAlt, FaChevronDown } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
 import { MdDashboard } from 'react-icons/md';
-const Navbar = () => {
-  const { logout, isAuthenticated, user, getMe } = useAuth();
-  const navigate = useNavigate();
+const Navbar = ({ isAuthenticated, handleDashboard, user, logout, navigate }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-
-  const handleDashboard = () => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
-
-    const roleRoutes = {
-      admin: '/dashboardAdmin',
-      siswa: '/dashboard',
-      dosen: '/dashboardDosen',
-      asdos: '/dashboardAsdos',
-    };
-
-    navigate(roleRoutes[user?.role] || '/login');
-  };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      getMe();
-    }
-  }, [isAuthenticated]);
 
   return (
     <nav className="backdrop-blur-sm bg-white/5 border-b border-white/10">

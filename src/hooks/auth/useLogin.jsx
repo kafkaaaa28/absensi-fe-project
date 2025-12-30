@@ -11,9 +11,9 @@ export default function useLogin() {
     setError('');
 
     try {
-      await login(data);
+      const res = await login(data);
     } catch (err) {
-      setError('Email atau password salah');
+      setError(err.response.data.message);
     } finally {
       setLoading(false);
     }
