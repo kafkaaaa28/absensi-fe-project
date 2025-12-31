@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-
+import { showToastError, showToastSuccess } from '../../utils/toast';
 export default function useLogin() {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
   const handleLogin = async (data) => {
     setLoading(true);
-    setError('');
 
     try {
       const res = await login(data);
+      showToastSuccess(`Selamat Datang ${res.role} ${res.nama}`);
     } catch (err) {
-      setError(err.response.data.message);
+      showToastError(err?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -21,7 +19,6 @@ export default function useLogin() {
 
   return {
     loading,
-    error,
     handleLogin,
   };
 }

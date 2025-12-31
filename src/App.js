@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import Login from './components/auth/login';
 import Beranda from './components/Beranda';
 import LoadingPage from './components/common/LoadingPage';
+import { Toaster } from 'react-hot-toast';
 // admin
 import AdminRoutes from './router/AdminRoutes';
 import AdminDashboard from './pages/Admin/dashboard/DataboardPage';
@@ -28,21 +29,27 @@ import JadwalMahasiswaPage from './pages/Mahasiswa/Jadwal/JadwalMahasiswaPage';
 import MatakuliahPage from './pages/Mahasiswa/Matakuliah/MatakuliahPage';
 import AbsensiPage from './pages/Mahasiswa/Absensi/AbsensiPage';
 function App() {
-  const [IsOpen, setIsOpen] = useState(true);
+  const [showLoader, setShowLoader] = useState(true);
   const { isAuthenticated, user, loading } = useAuth();
   useEffect(() => {
-    const timer1 = setTimeout(() => setIsOpen(false), 1200);
-  }, []);
+    if (!loading) {
+      const timer = setTimeout(() => {
+        setShowLoader(false);
+      }, 900);
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
   if (loading) {
     return (
-      <div className={`fixed top-0 left-0 w-full h-screen bg-[#162542] z-50 flex items-center justify-center transition-all duration-1000 ease-in-out transform ${IsOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+      <div className="fixed inset-0 bg-[#162542] flex items-center justify-center z-50">
         <LoadingPage color="#F3F4F6" />
       </div>
     );
   }
-
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden  ">
+      <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Beranda />} />
         <Route
@@ -86,6 +93,16 @@ function App() {
           <Route path="absensi" element={<AbsensiPage />} />
         </Route>
       </Routes>
+      <div
+        className={`
+          fixed inset-0 z-50 flex items-center justify-center
+          bg-[#162542]
+          transition-transform duration-500 ease-in-out
+          ${showLoader ? 'translate-y-0' : '-translate-y-full'}
+        `}
+      >
+        <LoadingPage color="#F3F4F6" />
+      </div>
     </div>
   );
 }

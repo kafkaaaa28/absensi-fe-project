@@ -1,5 +1,5 @@
 import React from 'react';
-import bgappease from './img/682940.webp';
+import bgappease from './img/beranda.webp';
 import urlQr from './img/UrlQr.png';
 import Navbar from './Navbar';
 import { FaQrcode, FaUserCheck, FaUniversity, FaChartLine, FaShieldAlt, FaMobileAlt } from 'react-icons/fa';

@@ -8,6 +8,7 @@ import useAbsensi from '../hooks/Siswa/useAbsensi';
 import { modalcekface } from '../utils/alerts';
 import ModalDaftarWajah from '../pages/Mahasiswa/components/ModalDaftarWajah';
 import { showAlert, ErrAlert } from '../utils/alerts';
+
 export default function MahasiswaLayout() {
   const { user } = useAuth();
   const { setStatusMap } = useAbsensiContext();
@@ -69,6 +70,7 @@ export default function MahasiswaLayout() {
 
     checkFace();
   }, []);
+
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2]">
       <Sidebar />

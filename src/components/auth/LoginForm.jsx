@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash, FaLock } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import { infoAlert } from '../../utils/alerts';
-export default function LoginForm({ onSubmit, loading, error }) {
+
+export default function LoginForm({ onSubmit, loading }) {
   const [showPass, setShowPass] = useState(false);
-  const [form, setForm] = useState({
+  const data = {
     identifier: '',
     password: '',
-  });
+  };
+  const [form, setForm] = useState(data);
+
   const [identifierType, setIdentifierType] = useState('');
   const handleChange = (e) => {
     const value = e.target.value;
@@ -24,7 +27,12 @@ export default function LoginForm({ onSubmit, loading, error }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(form);
+    try {
+      onSubmit(form);
+      setForm(data);
+    } catch (err) {
+      setForm(data);
+    }
   };
 
   return (
@@ -79,12 +87,6 @@ export default function LoginForm({ onSubmit, loading, error }) {
           </button>
         </div>
       </div>
-
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-          <p className="text-red-700 text-xs text-center font-medium">{error}</p>
-        </div>
-      )}
 
       <button
         type="submit"

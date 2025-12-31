@@ -26,3 +26,17 @@ body {
     transform: rotate(360deg);
   }
 }
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Internet Explorer */
+body {
+  -ms-overflow-style: none;
+}

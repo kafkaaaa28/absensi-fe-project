@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (fromData) => {
     const { data } = await api.post('/auth/login', fromData);
+
     setAccessToken(data.accessToken);
     await getMe();
     setIsAuthenticated(true);
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
         navigate('/');
       }
     }, 100);
+    return data.user;
   };
 
   const logout = async () => {

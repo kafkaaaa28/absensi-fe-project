@@ -1,10 +1,10 @@
 import LoginForm from './LoginForm';
 import useLogin from '../../hooks/auth/useLogin';
-import bgappease from '../img/unnamed.png';
+import bgappease from '../img/bg-login.webp';
 import appease from '../img/univ.png';
 
 export default function Login() {
-  const { handleLogin, loading, error } = useLogin();
+  const { handleLogin, loading } = useLogin();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50">
@@ -21,7 +21,7 @@ export default function Login() {
           <p className="text-gray-600 text-xs">Sign in to continue</p>
         </div>
 
-        <LoginForm onSubmit={handleLogin} loading={loading} error={error} />
+        <LoginForm onSubmit={handleLogin} loading={loading} />
 
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">© 2024 University System</p>
