@@ -43,7 +43,7 @@ const useAbsensi = () => {
 
       setDataAbsen(data || []);
     } catch (err) {
-      console.error(err);
+      console.error(err.response?.data?.message);
       setError('Terjadi kesalahan saat mengambil data absensi');
     } finally {
       setLoadingAbsen(false);

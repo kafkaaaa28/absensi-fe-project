@@ -39,7 +39,7 @@ const ProfileInformasi = ({ menuItems, additionalMenus, infoAlert }) => {
       <div className="flex flex-col gap-4 w-full lg:w-1/2">
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {additionalMenus.map((item, index) => (
-            <button key={index} onClick={infoAlert} className="w-full px-4 py-3 hover:bg-gray-50 transition-colors flex items-center justify-between border-b border-gray-100 last:border-b-0">
+            <button key={index} onClick={() => infoAlert('Mohon maaf fitur ini sedang diperbaiki')} className="w-full px-4 py-3 hover:bg-gray-50 transition-colors flex items-center justify-between border-b border-gray-100 last:border-b-0">
               <div className="flex items-center gap-3">
                 <span className="text-lg">{item.icon}</span>
                 <div className="text-left">

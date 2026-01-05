@@ -4,7 +4,7 @@ import * as faceapi from 'face-api.js';
 import { FaceDetection } from '@mediapipe/face_detection';
 import { Camera } from '@mediapipe/camera_utils';
 import api from '../../../../utils/api';
-
+import { ApiUpdateAbsenFace } from '../../../../api/Dosen/DosenApi';
 const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -292,10 +292,8 @@ const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
 
             try {
               // maka simpan ke db
-              await api.put('dosen/absensi/update-face', {
+              await ApiUpdateAbsenFace(data.id_kelas, data.id_jadwal, {
                 descriptor: Array.from(faceDetection.descriptor),
-                kelasId: data.id_kelas,
-                jadwalId: data.id_jadwal,
                 nim: match.nim,
                 nama_matkul: data.nama_matkul,
                 nama_kelas: data.nama_kelas,

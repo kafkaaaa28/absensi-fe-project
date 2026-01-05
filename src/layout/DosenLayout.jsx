@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/common/Sidebar';
+import Sidebar from '../components/common/Sidebar/Sidebar';
 export default function DosenLayout() {
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2] ">

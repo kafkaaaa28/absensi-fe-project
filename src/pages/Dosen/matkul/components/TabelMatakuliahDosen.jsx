@@ -1,7 +1,7 @@
 import React from 'react';
-import { FaSearch, FaBook, FaUsers, FaCode, FaCalendarAlt, FaUserGraduate, FaClipboardList } from 'react-icons/fa';
+import { FaPlus, FaBook, FaUsers, FaCode, FaCalendarAlt, FaUserGraduate, FaClipboardList, FaEye } from 'react-icons/fa';
 
-const TabelMatakuliahDosen = ({ data, searchTerm, onShowSiswa, onShowAbsen }) => {
+const TabelMatakuliahDosen = ({ data, searchTerm, onShowSiswa, onShowAbsen, onShowTambahAsisten, onShowDetailAsdos }) => {
   const filteredData = data.filter(
     (item) => (item.nama_matkul || '').toLowerCase().includes(searchTerm.toLowerCase()) || (item.nama_kelas || '').toLowerCase().includes(searchTerm.toLowerCase()) || (item.kode_matkul || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -36,6 +36,12 @@ const TabelMatakuliahDosen = ({ data, searchTerm, onShowSiswa, onShowAbsen }) =>
                 <div className="flex items-center gap-1.5">
                   <FaCode className="w-3.5 h-3.5 text-gray-500" />
                   <span className="text-gray-700 font-medium">Kode</span>
+                </div>
+              </th>
+              <th scope="col" className="px-3 py-2.5 text-left">
+                <div className="flex items-center gap-1.5">
+                  <FaCode className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">Asisten</span>
                 </div>
               </th>
               <th scope="col" className="px-3 py-2.5 text-left">
@@ -84,6 +90,13 @@ const TabelMatakuliahDosen = ({ data, searchTerm, onShowSiswa, onShowAbsen }) =>
                   </td>
                   <td className="px-3 py-2.5">
                     <code className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs font-mono">{item.kode_matkul}</code>
+                  </td>
+
+                  <td className="px-3 py-2.5">
+                    <button className="flex items-center gap-1 bg-purple-100 text-purple-800 px-2 py-1.5 rounded hover:bg-purple-200 transition-colors border border-purple-200 text-xs" onClick={() => onShowDetailAsdos(item)}>
+                      <FaEye className="w-3 h-3" />
+                      <span>Detail</span>
+                    </button>
                   </td>
                   <td className="px-3 py-2.5">
                     <div className="flex gap-1.5">

@@ -8,7 +8,7 @@ import { FaEnvelope, FaGraduationCap, FaIdCard, FaUniversity, FaUserEdit, FaLock
 import { infoAlert } from '../../../utils/alerts';
 import LoadingPage from '../../../components/common/LoadingPage';
 
-const ProfileDosenPage = () => {
+const ProfileMahasiswa = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const quickActions = [
@@ -103,4 +103,4 @@ const ProfileDosenPage = () => {
   );
 };
 
-export default ProfileDosenPage;
+export default ProfileMahasiswa;

@@ -28,6 +28,12 @@ import ProfileMahasiswaPage from './pages/Mahasiswa/Profile/ProfileMahasiswaPage
 import JadwalMahasiswaPage from './pages/Mahasiswa/Jadwal/JadwalMahasiswaPage';
 import MatakuliahPage from './pages/Mahasiswa/Matakuliah/MatakuliahPage';
 import AbsensiPage from './pages/Mahasiswa/Absensi/AbsensiPage';
+import ErrorPage from './pages/error/ErrorPage';
+import AsdosRoutes from './router/AsdosRoutes';
+import DataBoardAsdos from './pages/asdos/Dashboard/DataBoardAsdos';
+import ProfileAsisten from './pages/asdos/Profile/ProfileAsisten';
+import KelasAsdosPage from './pages/asdos/KelasAsdos/KelasAsdosPage';
+import JadwalAsdosPage from './pages/asdos/JadwalAsdos/JadwalAsdosPage';
 function App() {
   const [showLoader, setShowLoader] = useState(true);
   const { isAuthenticated, user, loading } = useAuth();
@@ -52,6 +58,7 @@ function App() {
       <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Beranda />} />
+        <Route path="/error" element={<ErrorPage />} />
         <Route
           path="/login"
           element={
@@ -62,7 +69,7 @@ function App() {
             ) : isAuthenticated && user?.role === 'siswa' ? (
               <Navigate to="/dashboard" />
             ) : isAuthenticated && user?.role === 'asdos' ? (
-              <Navigate to="/dashboardAsdos" />
+              <Navigate to="/dashboardAsisten" />
             ) : (
               <Login />
             )
@@ -91,6 +98,12 @@ function App() {
           <Route path="jadwal" element={<JadwalMahasiswaPage />} />
           <Route path="matakuliah" element={<MatakuliahPage />} />
           <Route path="absensi" element={<AbsensiPage />} />
+        </Route>
+        <Route path="/dashboardAsisten/*" element={isAuthenticated && user?.role === 'asdos' ? <AsdosRoutes /> : <Navigate to="/" />}>
+          <Route index element={<DataBoardAsdos />} />
+          <Route path="profile" element={<ProfileAsisten />} />
+          <Route path="kelas" element={<KelasAsdosPage />} />
+          <Route path="jadwal" element={<JadwalAsdosPage />} />
         </Route>
       </Routes>
       <div

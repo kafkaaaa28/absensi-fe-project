@@ -33,3 +33,10 @@ export const modalcekface = (data) => {
     confirmButtonText: 'OK',
   });
 };
+export const warningAlert = (data) => {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Informasi',
+    text: data,
+  });
+};

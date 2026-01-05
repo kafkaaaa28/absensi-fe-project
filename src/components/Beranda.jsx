@@ -41,7 +41,7 @@ const Beranda = () => {
       admin: '/dashboardAdmin',
       siswa: '/dashboard',
       dosen: '/dashboardDosen',
-      asdos: '/dashboardAsdos',
+      asdos: '/dashboardAsisten',
     };
 
     navigate(roleRoutes[user?.role] || '/login');

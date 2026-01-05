@@ -1,5 +1,22 @@
 import { useEffect, useState } from 'react';
-import { getJadwalDosen, getKelasDosen, ApiBukaAbsen, ApiUpdateAbsen, JadwalDosenHariIni, ApiFaceEmbedding, ApiUpdateAbsenFace, getMahasiswa, getSiswaPerkelas, TanggalAbsen, AbsenPerKelas, GenerateQr } from '../../api/Dosen/DosenApi';
+import {
+  getJadwalDosen,
+  getKelasDosen,
+  ApiBukaAbsen,
+  ApiUpdateAbsen,
+  JadwalDosenHariIni,
+  ApiFaceEmbedding,
+  ApiUpdateAbsenFace,
+  getMahasiswa,
+  getSiswaPerkelas,
+  TanggalAbsen,
+  AbsenPerKelas,
+  GenerateQr,
+  getAsdos,
+  TambahAsisten,
+  DetailAsdos,
+  deleteAsdos,
+} from '../../api/Dosen/DosenApi';
 export const useDosen = () => {
   const [dataSiswa, setDataSiswa] = useState([]);
   const [dataJadwal, setDataJadwal] = useState([]);
@@ -16,6 +33,10 @@ export const useDosen = () => {
   const [dataAbsenPerkelas, setDataAbsenPerkelas] = useState([]);
   const [tokenQr, setTokenQr] = useState('');
   const [loadingTokenQr, setloadingTokenQr] = useState(false);
+  const [dataAsdos, setDataAsdos] = useState([]);
+  const [loadingAsdos, setLoadingAsdos] = useState(false);
+  const [dataDetailAsdos, setDataDetailAsdos] = useState([]);
+  const [loadingDetailAsdos, setLoadingDetailAsdos] = useState(false);
   const fetchJadwal = async () => {
     setLoading(true);
     try {
@@ -51,9 +72,9 @@ export const useDosen = () => {
       setLoading(false);
     }
   };
-  const fetchSiswa = async (idJadwal, idKelas) => {
+  const fetchSiswa = async (idKelas, idJadwal) => {
     try {
-      const res = await getMahasiswa(idJadwal, idKelas);
+      const res = await getMahasiswa(idKelas, idJadwal);
       const { data } = res.data;
       setDataSiswa(data);
     } catch (err) {
@@ -95,13 +116,37 @@ export const useDosen = () => {
   const fetchTokenQr = async (id_kelas, id_jadwal) => {
     setloadingTokenQr(true);
     try {
-      const res = await GenerateQr({ id_kelas, id_jadwal });
+      const res = await GenerateQr(id_kelas, id_jadwal);
       const { token, expired_in } = res.data;
       setTokenQr(token);
     } catch (err) {
       console.error(err);
     } finally {
       setloadingTokenQr(false);
+    }
+  };
+  const fetchAsdos = async () => {
+    setLoadingAsdos(true);
+    try {
+      const res = await getAsdos();
+      const { data } = res.data;
+      setDataAsdos(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoadingAsdos(false);
+    }
+  };
+  const fetchDetailAsdos = async (idKelas, idDosen) => {
+    setLoadingDetailAsdos(true);
+    try {
+      const res = await DetailAsdos(idKelas, idDosen);
+      const { data } = res.data;
+      setDataDetailAsdos(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoadingDetailAsdos(false);
     }
   };
   useEffect(() => {
@@ -144,5 +189,13 @@ export const useDosen = () => {
     tokenQr,
     fetchTokenQr,
     loadingTokenQr,
+    dataAsdos,
+    fetchAsdos,
+    loadingAsdos,
+    TambahAsisten,
+    fetchDetailAsdos,
+    dataDetailAsdos,
+    loadingDetailAsdos,
+    deleteAsdos,
   };
 };

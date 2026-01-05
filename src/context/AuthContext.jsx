@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       } else if (userRole === 'dosen') {
         navigate('/dashboardDosen');
       } else if (userRole === 'asdos') {
-        navigate('/dashboardAsdos');
+        navigate('/dashboardAsisten');
       } else {
         navigate('/');
       }

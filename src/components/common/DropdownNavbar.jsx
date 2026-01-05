@@ -9,9 +9,9 @@ const DropdownNavbar = () => {
 
   const handleProfileNavigate = () => {
     const roleRoutes = {
-      dosen: '/dashboardDosen/profile',
+      dosen: '/dashboardDosen/ProfileSaya',
       siswa: '/dashboard/profile',
-      asdos: '/dashboardAsdos/profile',
+      asdos: '/dashboardAsisten/profile',
     };
     navigate(roleRoutes[user?.role] || '/');
   };

@@ -24,10 +24,10 @@ export const AbsensiProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!loading && user?.id_siswa) {
+    if (user?.id_siswa && user?.role === 'siswa') {
       fetchStatusAbsen();
     }
-  }, [loading, user?.id_siswa]);
+  }, [user?.id_siswa, user?.role]);
 
   return (
     <AbsensiContext.Provider

@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'flowbite-react';
+import { PiScanSmiley } from 'react-icons/pi';
+import { FaCalendarAlt, FaUsers, FaSearch, FaIdCard, FaClipboardCheck, FaQrcode } from 'react-icons/fa';
 
-import { FaCalendarAlt, FaUsers, FaSearch, FaIdCard, FaClipboardCheck } from 'react-icons/fa';
-
-const ModalLihatAbsenPerkelas = ({ data, showModalAbsen, dataAbsenPerkelas, tanggalAbsen, fetchTanggalAbsen, onFetchAbsen, resetForm, postTanggal, handleChange, loading }) => {
+const ModalLihatAbsenPerkelas = ({ data, showModalAbsen, dataAbsenPerkelas, tanggalAbsen, fetchTanggalAbsen, onFetchAbsen, resetForm, postTanggal, handleChange, loading, onShowUpdate }) => {
   useEffect(() => {
     if (data?.id_kelas) {
       fetchTanggalAbsen(data.id_kelas);
     }
   }, [data]);
-
   const fetchAllAbsen = async (e) => {
     e.preventDefault();
     onFetchAbsen(data.id_kelas);
   };
-
+  const getMethodIcon = (method) => {
+    switch (method?.toLowerCase()) {
+      case 'qr':
+        return <FaQrcode className="w-4 h-4" />;
+      case 'face':
+        return <PiScanSmiley className="w-4 h-4" />;
+      default:
+        return <FaClipboardCheck className="w-4 h-4" />;
+    }
+  };
   const getStatusColor = (status) => {
     const colors = {
       hadir: 'bg-green-100 text-green-800 border-green-200',
@@ -38,7 +46,12 @@ const ModalLihatAbsenPerkelas = ({ data, showModalAbsen, dataAbsenPerkelas, tang
   };
 
   const stats = calculateStats();
-
+  const statusOptions = [
+    { value: 'hadir', label: 'Hadir', color: 'bg-green-100 text-green-800' },
+    { value: 'izin', label: 'Izin', color: 'bg-blue-100 text-blue-800' },
+    { value: 'sakit', label: 'Sakit', color: 'bg-yellow-100 text-yellow-800' },
+    { value: 'alpha', label: 'Alpha', color: 'bg-red-100 text-red-800' },
+  ];
   return (
     <Modal show={showModalAbsen} onClose={resetForm} size="3xl">
       <ModalHeader className="border-b border-gray-200 px-6 py-4">
@@ -168,6 +181,8 @@ const ModalLihatAbsenPerkelas = ({ data, showModalAbsen, dataAbsenPerkelas, tang
                     </div>
                   </th>
                   <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Status</th>
+                  <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Metode</th>
+                  <th className="px-4 py-2.5 text-left text-gray-700 font-medium">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -187,6 +202,32 @@ const ModalLihatAbsenPerkelas = ({ data, showModalAbsen, dataAbsenPerkelas, tang
                         {item.status === 'alpha'}
                         <span className="capitalize">{item.status}</span>
                       </span>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <div className="text-gray-600">{getMethodIcon(item.method)}</div>
+                        <span className="text-gray-700 text-xs capitalize">{item.method || '-'}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <select
+                          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
+                          value={item.status}
+                          onChange={(e) => {
+                            onShowUpdate({
+                              ...item,
+                              status: e.target.value,
+                            });
+                          }}
+                        >
+                          {statusOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -13,10 +13,9 @@ const ModalEditStatus = ({ data, onUpdate, modalEditstatus, OnClose, refreshStat
 
   useEffect(() => {
     if (modalEditstatus && data?.id_jadwal && data?.id_kelas) {
-      fetchSiswa(data.id_jadwal, data.id_kelas);
+      fetchSiswa(data.id_kelas, data.id_jadwal);
     }
   }, [modalEditstatus]);
-
   const refresh = async (e) => {
     e.preventDefault();
     setLoadingrefresh(true);

@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/common/Sidebar';
+import Sidebar from '../components/common/Sidebar/Sidebar';
 import { useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
 import { useAuth } from '../context/AuthContext';

@@ -7,16 +7,45 @@ import TabelMatakuliahDosen from './components/TabelMatakuliahDosen';
 import LoadingPage from '../../../components/common/LoadingPage';
 import ModalLihatAbsenPerkelas from './components/ModalLihatAbsenPerkelas';
 import Swal from 'sweetalert2';
+import ModalTambahAsisten from './components/ModalTambahAsisten';
+import { showAlert, ErrAlert, warningAlert } from '../../../utils/alerts';
+import ModalDetailAsdos from './components/ModalDetailAsdos';
+import ModalDeleteAsisten from './components/ModalDeleteAsisten';
+import ModalUpdateAbsensi from './components/ModalUpdateAbsensi';
+import { ApiUpdateAbsenPerkelas } from '../../../api/Dosen/DosenApi';
 const MatkulDosenPage = () => {
   const { loading } = useAuth();
-  const { dataKelas, fetchSiswaPerkelas, dataSiswaPerkelas, loadingSiswa, dataAbsenPerkelas, tanggalAbsen, fetchAbsenPerkelas, fetchTanggalAbsen } = useDosen();
+  const {
+    dataKelas,
+    fetchSiswaPerkelas,
+    dataSiswaPerkelas,
+    loadingSiswa,
+    dataAbsenPerkelas,
+    tanggalAbsen,
+    fetchAbsenPerkelas,
+    fetchTanggalAbsen,
+    dataAsdos,
+    fetchAsdos,
+    loadingAsdos,
+    TambahAsisten,
+    loadingDetailAsdos,
+    fetchDetailAsdos,
+    dataDetailAsdos,
+    deleteAsdos,
+  } = useDosen();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKelas, setSelectedKelas] = useState(null);
   const [showModalSiswa, setShowModalSiswa] = useState(false);
   const [showModalAbsen, setshowModalAbsen] = useState(false);
   const [postTanggal, setPostTanggal] = useState({ tanggal: '' });
   const [loadingAbsen, setLoading] = useState(false);
-  const { tanggal } = postTanggal;
+  const [showTambahAsisten, setShowTambahAsisten] = useState(false);
+  const [showDetailAsdos, setShowDetailAsdos] = useState(false);
+  const [showDeleteAsisten, setShowDeleteAsisten] = useState(false);
+  const [selectedAsisten, setSelectedAsisten] = useState(null);
+  const [loadingForm, setLoadingForm] = useState(false);
+  const [selectedSiswa, setSelectedSiswa] = useState(null);
+  const [ModalUpdate, setModalUpdate] = useState(false);
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -60,6 +89,10 @@ const MatkulDosenPage = () => {
             setSelectedKelas(row);
             setshowModalAbsen(true);
           }}
+          onShowDetailAsdos={(row) => {
+            setSelectedKelas(row);
+            setShowDetailAsdos(true);
+          }}
         />
       </div>
       <ModalSiswaPerkelas data={selectedKelas} showModalSiswa={showModalSiswa} onClose={() => setShowModalSiswa(false)} dataSiswaPerkelas={dataSiswaPerkelas} fetchSiswaPerkelas={fetchSiswaPerkelas} loadingSiswa={loadingSiswa} />
@@ -73,21 +106,14 @@ const MatkulDosenPage = () => {
         postTanggal={postTanggal}
         onFetchAbsen={async (data) => {
           if (!postTanggal.tanggal) {
-            Swal.fire({
-              text: 'Silahkan pilih tanggal terlebih dahulu',
-              icon: 'warning',
-              confirmButtonText: 'OK',
-            });
+            warningAlert('Silahkan pilih tanggal terlebih dahulu');
             return;
           }
 
           const dateObj = new Date(postTanggal.tanggal);
-
           if (isNaN(dateObj.getTime())) {
-            Swal.fire({
-              text: 'Format tanggal tidak valid',
-              icon: 'error',
-            });
+            ErrAlert('Format tanggal tidak valid');
+
             return;
           }
 
@@ -104,6 +130,90 @@ const MatkulDosenPage = () => {
         }}
         handleChange={handleChange}
         loading={loadingAbsen}
+        onShowUpdate={(row) => {
+          setSelectedSiswa(row);
+          setModalUpdate(true);
+        }}
+      />
+      <ModalTambahAsisten
+        data={selectedKelas}
+        dataAsdos={dataAsdos}
+        fetchAsdos={fetchAsdos}
+        loading={loadingAsdos}
+        isOpen={showTambahAsisten}
+        loadingForm={loadingForm}
+        setLoadingForm={setLoadingForm}
+        onClose={() => setShowTambahAsisten(false)}
+        onSubmit={async (data) => {
+          try {
+            const res = await TambahAsisten(data);
+            const message = res.data.message;
+            showAlert(message);
+            fetchDetailAsdos(selectedKelas.id_kelas, selectedKelas.id_dosen);
+            setShowTambahAsisten(false);
+          } catch (err) {
+            const errorMessage = err.response?.data?.message || 'Terjadi kesalahan';
+            ErrAlert(errorMessage);
+          }
+        }}
+      />
+      <ModalDetailAsdos
+        data={selectedKelas}
+        isOpen={showDetailAsdos}
+        onClose={() => setShowDetailAsdos(false)}
+        loading={loadingDetailAsdos}
+        dataDetail={dataDetailAsdos}
+        fetchDetailAsdos={fetchDetailAsdos}
+        onShowTambahAsisten={(data) => {
+          setSelectedKelas(data);
+          setShowTambahAsisten(true);
+        }}
+        onShowDeleteAsisten={(data) => {
+          setShowDeleteAsisten(true);
+          setSelectedAsisten(data);
+        }}
+      />
+      <ModalDeleteAsisten
+        isOpen={showDeleteAsisten}
+        asisten={selectedAsisten}
+        loading={loadingForm}
+        onClose={() => setShowDeleteAsisten(false)}
+        onDelete={async (id) => {
+          setLoadingForm(true);
+          try {
+            const res = await deleteAsdos(id);
+            showAlert(res.data.message);
+            fetchDetailAsdos(selectedKelas.id_kelas, selectedKelas.id_dosen);
+          } catch (err) {
+            console.log(err.response?.data?.message || 'Failed to delete Asdos');
+            ErrAlert(err.response?.data?.message);
+          } finally {
+            setShowDeleteAsisten(false);
+            setLoadingForm(false);
+          }
+        }}
+      />
+      <ModalUpdateAbsensi
+        isOpen={ModalUpdate}
+        onClose={() => setModalUpdate(false)}
+        loading={loadingForm}
+        data={selectedSiswa}
+        onUpdate={async (id_absen, status) => {
+          setLoadingForm(true);
+          const dateObj = new Date(selectedSiswa.tanggal);
+          const formattedDate = dateObj.toLocaleDateString('en-CA');
+          try {
+            const res = await ApiUpdateAbsenPerkelas(selectedSiswa.id_kelas, id_absen, { status });
+            setModalUpdate(false);
+            fetchAbsenPerkelas(selectedSiswa.id_kelas, formattedDate);
+            showAlert(res.data.message);
+          } catch (error) {
+            console.error(error);
+            ErrAlert(error.response?.data?.message);
+          } finally {
+            setLoadingForm(false);
+          }
+        }}
       />
     </>
   );

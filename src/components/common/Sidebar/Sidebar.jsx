@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { TbLogout2 } from 'react-icons/tb';
-import { useAuth } from '../../context/AuthContext';
-import appease from '../img/univ.png';
+import { useAuth } from '../../../context/AuthContext';
+import appease from '../../img/univ.png';
 import SidebarAdmin from './SidebarAdmin';
+import SidebarAsisten from './SidebarAsisten';
 import SidebarDosen from './SidebarDosen';
 import SidebarMahasiswa from './SidebarMahasiswa';
-import DropdownNavbar from './DropdownNavbar';
+import DropdownNavbar from '../DropdownNavbar';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 export default function Sidebar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -74,6 +75,7 @@ export default function Sidebar() {
             {isAuthenticated && user?.role === 'admin' && <SidebarAdmin />}
             {isAuthenticated && user?.role === 'dosen' && <SidebarDosen />}
             {isAuthenticated && user?.role === 'siswa' && <SidebarMahasiswa />}
+            {isAuthenticated && user?.role === 'asdos' && <SidebarAsisten />}
           </ul>
           <button onClick={logout} className="flex items-center p-2 w-full mt-auto text-white rounded-lg hover:bg-white/10">
             <TbLogout2 />
