@@ -124,6 +124,7 @@ const MahasiswaPage = () => {
           try {
             const res = await deleteFaceMahasiswa(id);
             showAlert(res.data.message);
+            fetchMahasiswa();
           } catch (err) {
             console.log(err.response?.data?.message || 'Failed to delete user');
             ErrAlert(err.response?.data?.message);

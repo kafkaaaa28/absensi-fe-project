@@ -1,9 +1,9 @@
 import { FaRegEdit, FaRegTrashAlt, FaUser, FaIdCard, FaUniversity, FaGraduationCap, FaCalendar } from 'react-icons/fa';
 import { TbFaceId } from 'react-icons/tb';
-
+import { FaRegFaceGrin } from 'react-icons/fa6';
 const MahasiswaTable = ({ data, search, onEdit, onDelete, onDeleteFace }) => {
   const filtered = data.filter((item) => (item.nim || '').toLowerCase().includes(search.toLowerCase()) || (item.nama || '').toLowerCase().includes(search.toLowerCase()));
-
+  console.log(data);
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="overflow-x-auto">
@@ -41,6 +41,12 @@ const MahasiswaTable = ({ data, search, onEdit, onDelete, onDeleteFace }) => {
                 <div className="flex items-center gap-2">
                   <FaCalendar className="w-3.5 h-3.5 text-gray-500" />
                   <span className="text-gray-700 font-medium">Semester</span>
+                </div>
+              </th>
+              <th scope="col" className="px-4 py-3 text-left">
+                <div className="flex items-center gap-2">
+                  <FaRegFaceGrin className="w-3.5 h-3.5 text-gray-500" />
+                  <span className="text-gray-700 font-medium">Wajah</span>
                 </div>
               </th>
               <th scope="col" className="px-4 py-3 text-left">
@@ -84,6 +90,11 @@ const MahasiswaTable = ({ data, search, onEdit, onDelete, onDeleteFace }) => {
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 text-xs font-medium">Semester {item.semester}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full ${item.face_available ? `bg-green-100 text-green-700` : `bg-gray-100 text-gray-700`} text-xs font-medium`}>
+                      {item.face_available ? 'Tersedia' : 'Tidak Tersedia'}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1.5">
