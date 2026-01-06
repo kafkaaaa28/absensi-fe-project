@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/common/Sidebar/Sidebar';
-import { useEffect, useState } from 'react';
+import { Children, useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
 import { useAuth } from '../context/AuthContext';
 import { useAbsensiContext } from '../context/AbsensiContext ';
@@ -9,7 +9,7 @@ import { modalcekface } from '../utils/alerts';
 import ModalDaftarWajah from '../pages/Mahasiswa/components/ModalDaftarWajah';
 import { showAlert, ErrAlert } from '../utils/alerts';
 
-export default function MahasiswaLayout() {
+export default function MahasiswaLayout({ children }) {
   const { user } = useAuth();
   const { setStatusMap } = useAbsensiContext();
   const { cekFace } = useAbsensi();
@@ -74,9 +74,7 @@ export default function MahasiswaLayout() {
   return (
     <div className="min-h-screen w-full bg-[#FAF7F2]">
       <Sidebar />
-      <div className="ml-[20px] mr-[20px] md:ml-[270px] md:mr-[20px] pb-8 mt-4 sm:mt-20">
-        <Outlet />
-      </div>
+      <div className="ml-[20px] mr-[20px] md:ml-[270px] md:mr-[20px] pb-8 mt-4 sm:mt-20">{children}</div>
       <ModalDaftarWajah showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
