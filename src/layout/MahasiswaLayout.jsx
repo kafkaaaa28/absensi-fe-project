@@ -20,8 +20,6 @@ export default function MahasiswaLayout({ children }) {
       setShowModal(true);
     }
   };
-  console.log(user);
-  console.log(user.id_siswa);
   useEffect(() => {
     if (!user?.id_siswa) return;
 
