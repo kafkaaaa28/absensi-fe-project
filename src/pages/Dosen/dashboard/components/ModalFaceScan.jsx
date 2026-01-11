@@ -391,14 +391,7 @@ const ModalFaceScan = ({ data, modalLihat, OnClose }) => {
             <canvas ref={canvasRef} width="640" height="480" className="absolute top-0 left-0" />
           </div>
 
-          <p className="mt-3 text-gray-700 text-center">
-            {loading ? '⏳ Loading...' : message}
-            {absenBerhasilList.length > 0 && (
-              <div className="mt-2">
-                <p className="text-sm text-green-600">Sudah absen: {absenBerhasilList.map((item) => item.name).join(', ')}</p>
-              </div>
-            )}
-          </p>
+          <p className="mt-3 text-gray-700 text-center">{loading ? '⏳ Loading...' : message}</p>
         </div>
       </ModalBody>
 

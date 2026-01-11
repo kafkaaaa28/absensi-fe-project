@@ -1,11 +1,15 @@
-import React from 'react';
+import { useEffect } from 'react';
 import bgadmin from '../../../../components/img/bgadmin.png';
 import { useAuth } from '../../../../context/AuthContext';
 import { FaUserShield, FaChartLine, FaBell, FaCog, FaUserFriends, FaChalkboardTeacher, FaBook, FaCalendarAlt } from 'react-icons/fa';
+import { useMahasiswa } from '../../../../hooks/Admin/useMahasiswa';
 
-const DataBoard = ({ loadingCount, Menu }) => {
+const DataBoard = () => {
   const { user } = useAuth();
-
+  const { totalUser, fetchTotalUser, loadingTotalUser } = useMahasiswa();
+  useEffect(() => {
+    fetchTotalUser();
+  }, []);
   const quickStats = [
     { label: 'Hari Ini', value: 'Aktif', color: 'bg-green-100 text-green-800' },
     { label: 'Pengunjung', value: '24/7', color: 'bg-blue-100 text-blue-800' },
@@ -65,7 +69,7 @@ const DataBoard = ({ loadingCount, Menu }) => {
                 </div>
                 <div>
                   <p className="text-white/80 text-sm">Total Pengguna</p>
-                  <p className="text-white text-xl font-bold">23</p>
+                  <p className="text-white text-xl font-bold">{loadingTotalUser ? <div className="w-4 h-4 border-2 mt-2 border-white border-t-transparent rounded-full animate-spin"></div> : totalUser}</p>
                 </div>
               </div>
             </div>
@@ -79,6 +83,7 @@ const DataBoard = ({ loadingCount, Menu }) => {
                   <p className="text-white/80 text-sm">Tanggal</p>
                   <p className="text-white text-xl font-bold">
                     {new Date().toLocaleDateString('id-ID', {
+                      weekday: 'long',
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
